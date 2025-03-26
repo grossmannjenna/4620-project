@@ -8,9 +8,9 @@ GRANT ALL ON PizzaDB.* TO 'dbtester';
 
 CREATE TABLE CUSTOMER (
     CustID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    FName VARCHAR(30) NOT NULL,
-    LName VARCHAR(30) NOT NULL,
-    PhoneNum VARCHAR(30) NOT NULL
+    FName VARCHAR(30),
+    LName VARCHAR(30),
+    PhoneNum VARCHAR(30)
 );
 
 CREATE TABLE ORDERTABLE (
@@ -19,7 +19,7 @@ CREATE TABLE ORDERTABLE (
     OrderDateTime DATETIME NOT NULL,
     CustPrice DECIMAL(5,2) NOT NULL,
     BusPrice DECIMAL(5,2) NOT NULL,
-    isComplete TINYINT(1) NOT NULL,
+    isComplete BOOLEAN NOT NULL,
     CustID INT NOT NULL,
     CONSTRAINT 'CustID' FOREIGN KEY('CustID') REFERENCES 'CUSTOMER'('CustID')
 
@@ -150,15 +150,18 @@ INSERT INTO DISCOUNT VALUES(5, 'Happy Hour', 0.1, TRUE);
 INSERT INTO DISCOUNT VALUES(6, 'Gameday Special', 0.2, TRUE);
 
 # Order 1 Notes
-INSERT 
-# 03.05.2025 at 12:03 pm
-# dine in - table 21
+INSERT INTO CUSTOMER VALUES(1, NULL, NULL, NULL);
+INSERT INTO ORDERTABLE VALUES(1, 'Dine-in', '2025-03-05 12:03', 19.75, 3.68, TRUE, 1);
+INSERT INTO DINEIN VALUES(1, 21);
+INSERT INTO PIZZA VALUES(1, 'Large', 'Thin', )
+# 03.05.2025 at 12:03 pm YES
+# dine in - table 21 YES
 # large
 # thin crust
 # regular cheese (extra)
 # Pepperoni
 # sausage
-# price : 19.75 (after discount)
-# cost: 3.68
+# price : 19.75 (after discount) YES
+# cost: 3.68 YES
 # lunch special large discount
-# completed
+# completed YES
