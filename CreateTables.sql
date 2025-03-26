@@ -148,3 +148,17 @@ INSERT INTO DISCOUNT VALUES(3, 'Lunch Special Large', 2, FALSE);
 INSERT INTO DISCOUNT VALUES(4, 'Specialty Pizza', 1.5, FALSE);
 INSERT INTO DISCOUNT VALUES(5, 'Happy Hour', 0.1, TRUE);
 INSERT INTO DISCOUNT VALUES(6, 'Gameday Special', 0.2, TRUE);
+
+# Order 1 Notes
+INSERT 
+# 03.05.2025 at 12:03 pm
+# dine in - table 21
+# large
+# thin crust
+# regular cheese (extra)
+# Pepperoni
+# sausage
+# price : 19.75 (after discount)
+# cost: 3.68
+# lunch special large discount
+# completed
