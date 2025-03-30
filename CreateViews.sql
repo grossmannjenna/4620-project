@@ -1,0 +1,3 @@
+CREATE VIEW ToppingPopularity AS
+    SELECT TopID
+    FROM PIZZA_TOPPING;
