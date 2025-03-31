@@ -54,26 +54,25 @@ CREATE TABLE baseprice (
     baseprice_Size VARCHAR(30) NOT NULL,
     baseprice_CrustType VARCHAR(30) NOT NULL,
     baseprice_CustPrice DECIMAL(5,2) NOT NULL,
-    baseprice_BusPrice DECIMAL(5,2) NOT NULL,
-    PRIMARY KEY (baseprice_Size, baseprice_CrustType)
+    baseprice_BusPrice DECIMAL(5,2) NOT NULL
 );
 
 CREATE TABLE pizza (
     pizza_PizzaID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    pizza_Size VARCHAR(30) NOT NULL,
-    pizza_CrustType VARCHAR(30) NOT NULL,
+    baseprice_Size VARCHAR(30) NOT NULL,
+    baseprice_CrustType VARCHAR(30) NOT NULL,
     pizza_PizzaState VARCHAR(30) NOT NULL,
     pizza_PizzaDate DATETIME NOT NULL,
     pizza_CustPrice DECIMAL(5,2) NOT NULL,
     pizza_BusPrice DECIMAL(5,2) NOT NULL,
     ordertable_OrderID INT NOT NULL,
     CONSTRAINT `pizza_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`),
-    CONSTRAINT pizzaFK_SizeCrust FOREIGN KEY (pizza_Size, pizza_CrustType)
-    REFERENCES baseprice(baseprice_Size, baseprice_CrustType)
+    CONSTRAINT `baseprice_Size` FOREIGN KEY(`baseprice_Size`) REFERENCES baseprice (`baseprice_Size`),
+    CONSTRAINT `baseprice_CrustType` FOREIGN KEY(`baseprice_CrustType`) REFERENCES baseprice (`baseprice_CrustType`)
 );
 
 CREATE TABLE topping (
-    topping_TopID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    topping_TopID INT PRIMARY KEY NOT NULL,
     topping_TopName VARCHAR(30) NOT NULL,
     topping_SmallAMT DECIMAL(5, 2) NOT NULL,
     topping_MedAMT DECIMAL(5, 2) NOT NULL,
