@@ -10,103 +10,105 @@ CREATE USER 'dbtester' IDENTIFIED BY 'CPSC4620';
 GRANT ALL ON PizzaDB.* TO 'dbtester';
 
 CREATE TABLE customer (
-    CustID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    FName VARCHAR(30),
-    LName VARCHAR(30),
-    PhoneNum VARCHAR(30)
+    customer_CustID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    customer_FName VARCHAR(30) NOT NULL,
+    customer_LName VARCHAR(30) NOT NULL,
+    customer_PhoneNum VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE ordertable (
-    OrderID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    OrderType VARCHAR(30) NOT NULL,
-    OrderDateTime DATETIME NOT NULL,
-    CustPrice DECIMAL(5,2) NOT NULL,
-    BusPrice DECIMAL(5,2) NOT NULL,
-    isComplete BOOLEAN NOT NULL,
-    CustID INT NOT NULL,
-    CONSTRAINT `CustID` FOREIGN KEY(`CustID`) REFERENCES `customer` (`CustID`)
+    ordertable_OrderID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    ordertable_OrderType VARCHAR(30) NOT NULL,
+    ordertable_OrderDateTime DATETIME NOT NULL,
+    ordertable_CustPrice DECIMAL(5,2) NOT NULL,
+    ordertable_BusPrice DECIMAL(5,2) NOT NULL,
+    ordertable_isComplete BOOLEAN DEFAULT 0,
+    customer_CustID INT,
+    CONSTRAINT `customer_CustID` FOREIGN KEY(`customer_CustID`) REFERENCES `customer` (`customer_CustID`)
 );
 
 CREATE TABLE pickup (
-    OrderID INT PRIMARY KEY,
-    IsPickedUp BOOLEAN NOT NULL,
-    CONSTRAINT `picked_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`) ON DELETE CASCADE
+    ordertable_OrderID INT PRIMARY KEY,
+    pickup_IsPickedUp BOOLEAN NOT NULL DEFAULT 0,
+    CONSTRAINT `picked_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`) ON DELETE CASCADE
 );
 
 CREATE TABLE delivery (
-    OrderID INT PRIMARY KEY,
-    HouseNum INT NOT NULL,
-    Street VARCHAR(30) NOT NULL,
-    City VARCHAR(30) NOT NULL,
-    State VARCHAR(2) NOT NULL,
-    Zip INT NOT NULL,
-    IsDelivered BOOLEAN NOT NULL,
-    CONSTRAINT `delivery_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`) ON DELETE CASCADE
+    ordertable_OrderID INT PRIMARY KEY,
+    delivery_HouseNum INT NOT NULL,
+    delivery_Street VARCHAR(30) NOT NULL,
+    delivery_City VARCHAR(30) NOT NULL,
+    delivery_State VARCHAR(2) NOT NULL,
+    delivery_Zip INT NOT NULL,
+    delivery_IsDelivered BOOLEAN NOT NULL DEFAULT 0,
+    CONSTRAINT `delivery_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`) ON DELETE CASCADE
 );
 
 CREATE TABLE dinein (
-    OrderID INT PRIMARY KEY,
-    TableNum INT NOT NULL,
-    CONSTRAINT `dineIn_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`) ON DELETE CASCADE
-);
-
-CREATE TABLE pizza (
-    PizzaID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    Size VARCHAR(30) NOT NULL,
-    CrustType VARCHAR(30) NOT NULL,
-    PizzaState VARCHAR(30) NOT NULL,
-    PizzaDate DATETIME NOT NULL,
-    CustPrice DECIMAL(5,2) NOT NULL,
-    BusPrice DECIMAL(5,2) NOT NULL,
-    OrderID INT NOT NULL,
-    CONSTRAINT `pizza_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`)
+    ordertable_OrderID INT PRIMARY KEY,
+    dinein_TableNum INT NOT NULL,
+    CONSTRAINT `dineIn_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`) ON DELETE CASCADE
 );
 
 CREATE TABLE baseprice (
-    Size VARCHAR(30) NOT NULL,
-    CrustType VARCHAR(30) NOT NULL,
-    CustPrice DECIMAL(5,2) NOT NULL,
-    BusPrice DECIMAL(5,2) NOT NULL
+    baseprice_Size VARCHAR(30) NOT NULL,
+    baseprice_CrustType VARCHAR(30) NOT NULL,
+    baseprice_CustPrice DECIMAL(5,2) NOT NULL,
+    baseprice_BusPrice DECIMAL(5,2) NOT NULL
+);
+
+CREATE TABLE pizza (
+    pizza_PizzaID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    baseprice_Size VARCHAR(30) NOT NULL,
+    baseprice_CrustType VARCHAR(30) NOT NULL,
+    pizza_PizzaState VARCHAR(30) NOT NULL,
+    pizza_PizzaDate DATETIME NOT NULL,
+    pizza_CustPrice DECIMAL(5,2) NOT NULL,
+    pizza_BusPrice DECIMAL(5,2) NOT NULL,
+    ordertable_OrderID INT NOT NULL,
+    CONSTRAINT `pizza_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`)
+    CONSTRAINT `baseprice_Size` FOREIGN KEY(`baseprice_Size`) REFERENCES baseprice (`baseprice_Size`)
+    CONSTRAINT `baseprice_CrustType` FOREIGN KEY(`baseprice_CrustType`) REFERENCES baseprice (`baseprice_CrustType`)
 );
 
 CREATE TABLE topping (
-    TopID INT PRIMARY KEY NOT NULL,
-    TopName VARCHAR(30) NOT NULL,
-    SmallAMT DECIMAL(5, 2) NOT NULL,
-    MedAMT DECIMAL(5, 2) NOT NULL,
-    LgAMT DECIMAL(5, 2) NOT NULL,
-    XLAMT DECIMAL(5, 2) NOT NULL,
-    CustPrice DECIMAL(5, 2) NOT NULL,
-    BusPrice DECIMAL(5, 2) NOT NULL,
-    MinINVT INT NOT NULL,
-    CurINVT INT NOT NULL
+    topping_TopID INT PRIMARY KEY NOT NULL,
+    topping_TopName VARCHAR(30) NOT NULL,
+    topping_SmallAMT DECIMAL(5, 2) NOT NULL,
+    topping_MedAMT DECIMAL(5, 2) NOT NULL,
+    topping_LgAMT DECIMAL(5, 2) NOT NULL,
+    topping_XLAMT DECIMAL(5, 2) NOT NULL,
+    topping_CustPrice DECIMAL(5, 2) NOT NULL,
+    topping_BusPrice DECIMAL(5, 2) NOT NULL,
+    topping_MinINVT INT NOT NULL,
+    topping_CurINVT INT NOT NULL
  );
 
 CREATE TABLE pizza_topping (
-    PizzaID INT NOT NULL,
-    TopID INT NOT NULL,
-    IsDouble INT NOT NULL,
-    CONSTRAINT `fk_PizzaID` FOREIGN KEY(`PizzaID`) REFERENCES pizza (`PizzaID`),
-    CONSTRAINT `fk_TopID` FOREIGN KEY(`TopID`) REFERENCES topping (`TopID`)
+    pizza_PizzaID INT NOT NULL,
+    topping_TopID INT NOT NULL,
+    pizza_topping_IsDouble INT NOT NULL,
+    CONSTRAINT `fk_PizzaID` FOREIGN KEY(`pizza_PizzaID`) REFERENCES pizza (`pizza_PizzaID`),
+    CONSTRAINT `fk_TopID` FOREIGN KEY(`topping_TopID`) REFERENCES topping (`topping_TopID`)
 );
 
 CREATE TABLE discount (
-    DiscountID INT PRIMARY KEY NOT NULL,
-    DiscountName VARCHAR(30) NOT NULL,
-    Amount DECIMAL(5,2),
-    IsPercent BOOLEAN
+    discount_DiscountID INT PRIMARY KEY NOT NULL,
+    discount_DiscountName VARCHAR(30) NOT NULL,
+    discount_Amount DECIMAL(5,2),
+    discount_IsPercent BOOLEAN
 );
 
 CREATE TABLE pizza_discount (
-    PizzaID INT NOT NULL,
-    DiscountID INT NOT NULL,
-    CONSTRAINT `PizzaID` FOREIGN KEY(`PizzaID`) REFERENCES pizza(`PizzaID`),
-    CONSTRAINT `DiscountID` FOREIGN KEY(`DiscountID`) REFERENCES discount(`DiscountID`)
+    pizza_PizzaID INT NOT NULL,
+    discount_DiscountID INT NOT NULL,
+    CONSTRAINT `PizzaID` FOREIGN KEY(`pizza_PizzaID`) REFERENCES pizza(`pizza_PizzaID`),
+    CONSTRAINT `DiscountID` FOREIGN KEY(`discount_DiscountID`) REFERENCES discount(`discount_DiscountID`)
 );
 
 CREATE TABLE order_discount (
-    OrderID INT NOT NULL,
-    DiscountID INT NOT NULL,
-    CONSTRAINT `fk_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`),
-    CONSTRAINT `fk_DiscountID` FOREIGN KEY(`DiscountID`) REFERENCES discount (`DiscountID`)
+    ordertable_OrderID INT NOT NULL,
+    discount_DiscountID INT NOT NULL,
+    CONSTRAINT `fk_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`),
+    CONSTRAINT `fk_DiscountID` FOREIGN KEY(`discount_DiscountID`) REFERENCES discount (`discount_DiscountID`)
 );

@@ -45,7 +45,7 @@ INSERT INTO discount VALUES(5, 'Happy Hour', 0.1, TRUE);
 INSERT INTO discount VALUES(6, 'Gameday Special', 0.2, TRUE);
 
 # Order 1
-INSERT INTO customer VALUES(1, NULL, NULL, NULL);
+INSERT INTO customer VALUES(1, '', '', '');
 INSERT INTO ordertable VALUES(1, 'dinein', '2025-03-05 12:03', 19.75, 3.68, TRUE, 1);
 INSERT INTO dinein VALUES(1, 21);
 INSERT INTO pizza VALUES(1, 'Large', 'Thin', 'Complete', '2025-03-05 12:03', 19.75, 3.68, 1);
@@ -55,7 +55,7 @@ INSERT INTO pizza_topping VALUES(1, 2, 0);
 INSERT INTO pizza_discount VALUES(1, 3);
 
 # Order 2
-INSERT INTO customer VALUES(2, NULL, NULL, NULL);
+INSERT INTO customer VALUES(2, '', '', '');
 INSERT INTO ordertable VALUES(2, 'dinein','2025-04-03 12:05', 19.73, 4.63, TRUE, 2);
 INSERT INTO dinein VALUES(2, 4);
 INSERT INTO pizza VALUES(2, 'Medium', 'Pan', 'Complete', '2025-04-03 12:05', 12.85, 3.23, 2);
