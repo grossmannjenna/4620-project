@@ -66,8 +66,8 @@ CREATE TABLE pizza (
     pizza_CustPrice DECIMAL(5,2) NOT NULL,
     pizza_BusPrice DECIMAL(5,2) NOT NULL,
     ordertable_OrderID INT NOT NULL,
-    CONSTRAINT `pizza_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`)
-    CONSTRAINT `baseprice_Size` FOREIGN KEY(`baseprice_Size`) REFERENCES baseprice (`baseprice_Size`)
+    CONSTRAINT `pizza_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`),
+    CONSTRAINT `baseprice_Size` FOREIGN KEY(`baseprice_Size`) REFERENCES baseprice (`baseprice_Size`),
     CONSTRAINT `baseprice_CrustType` FOREIGN KEY(`baseprice_CrustType`) REFERENCES baseprice (`baseprice_CrustType`)
 );
 
