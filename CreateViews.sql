@@ -4,8 +4,8 @@ CREATE OR REPLACE VIEW ToppingPopularity AS
                     WHEN PT.IsDouble = 0 THEN 1
                     ELSE 0
            END) AS ToppingCount
-    FROM TOPPING T
-    LEFT JOIN PIZZA_TOPPING PT on T.TopID = PT.TopID
+    FROM PIZZA_TOPPING PT
+    LEFT JOIN Topping T on PT.TopID = T.TopID
     GROUP BY T.TopName
     ORDER BY ToppingCount DESC, TopName ASC;
 
