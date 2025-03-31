@@ -22,3 +22,22 @@ CREATE OR REPLACE VIEW ProfitByPizza AS
 
 SELECT *
 FROM ProfitByPizza;
+
+CREATE OR REPLACE VIEW ProfitByOrderType AS
+    SELECT OrderType AS customerType,
+           DATE_FORMAT(OrderDateTime, '%c/%Y') AS OrderMonth,
+           ROUND(SUM(CustPrice), 2) AS TotalOrderPrice,
+           ROUND(SUM(BusPrice), 2) AS TotalOrderCost,
+           ROUND(SUM(CustPrice - BusPrice), 2) AS Profit
+    FROM ORDERTABLE
+    GROUP BY customerType, DATE_FORMAT(OrderDateTime, '%c/%Y')
+    UNION ALL
+    SELECT '',
+           'Grand Total',
+           ROUND(SUM(CustPrice), 2),
+           ROUND(SUM(BusPrice), 2),
+           ROUND(SUM(CustPrice - BusPrice), 2)
+    FROM ORDERTABLE;
+
+SELECT *
+FROM ProfitByOrderType;
