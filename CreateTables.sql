@@ -16,7 +16,7 @@ CREATE TABLE customer (
     PhoneNum VARCHAR(30)
 );
 
-CREATE TABLE orderTable (
+CREATE TABLE ordertable (
     OrderID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
     OrderType VARCHAR(30) NOT NULL,
     OrderDateTime DATETIME NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE orderTable (
 CREATE TABLE pickup (
     OrderID INT PRIMARY KEY,
     IsPickedUp BOOLEAN NOT NULL,
-    CONSTRAINT `picked_OrderID` FOREIGN KEY(`OrderID`) REFERENCES orderTable (`OrderID`) ON DELETE CASCADE
+    CONSTRAINT `picked_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`) ON DELETE CASCADE
 );
 
 CREATE TABLE delivery (
@@ -41,13 +41,13 @@ CREATE TABLE delivery (
     State VARCHAR(2) NOT NULL,
     Zip INT NOT NULL,
     IsDelivered BOOLEAN NOT NULL,
-    CONSTRAINT `delivery_OrderID` FOREIGN KEY(`OrderID`) REFERENCES orderTable (`OrderID`) ON DELETE CASCADE
+    CONSTRAINT `delivery_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`) ON DELETE CASCADE
 );
 
 CREATE TABLE dinein (
     OrderID INT PRIMARY KEY,
     TableNum INT NOT NULL,
-    CONSTRAINT `dineIn_OrderID` FOREIGN KEY(`OrderID`) REFERENCES orderTable (`OrderID`) ON DELETE CASCADE
+    CONSTRAINT `dineIn_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`) ON DELETE CASCADE
 );
 
 CREATE TABLE pizza (
@@ -59,7 +59,7 @@ CREATE TABLE pizza (
     CustPrice DECIMAL(5,2) NOT NULL,
     BusPrice DECIMAL(5,2) NOT NULL,
     OrderID INT NOT NULL,
-    CONSTRAINT `pizza_OrderID` FOREIGN KEY(`OrderID`) REFERENCES orderTable (`OrderID`)
+    CONSTRAINT `pizza_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`)
 );
 
 CREATE TABLE baseprice (
@@ -107,6 +107,6 @@ CREATE TABLE pizza_discount (
 CREATE TABLE order_discount (
     OrderID INT NOT NULL,
     DiscountID INT NOT NULL,
-    CONSTRAINT `fk_OrderID` FOREIGN KEY(`OrderID`) REFERENCES orderTable (`OrderID`),
+    CONSTRAINT `fk_OrderID` FOREIGN KEY(`OrderID`) REFERENCES ordertable (`OrderID`),
     CONSTRAINT `fk_DiscountID` FOREIGN KEY(`DiscountID`) REFERENCES discount (`DiscountID`)
 );
