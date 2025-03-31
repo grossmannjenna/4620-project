@@ -11,3 +11,14 @@ CREATE OR REPLACE VIEW ToppingPopularity AS
 
 SELECT *
 FROM ToppingPopularity;
+
+CREATE OR REPLACE VIEW ProfitByPizza AS
+    SELECT B.Size, B.CrustType AS Crust,
+           SUM(B.CustPrice-B.BusPrice) AS Profit, MONTH(OrderDateTime) AS OrderMonth
+    FROM BASEPRICE B
+    LEFT JOIN ORDERTABLE OT ON B.BusPrice = OT.BusPrice
+    GROUP BY Size, CrustType,OrderMonth
+    ORDER BY Profit DESC;
+
+SELECT *
+FROM ProfitByPizza;
