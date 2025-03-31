@@ -1,3 +1,6 @@
+-- Elle Hanckel: ToppingPopularity View, ProfitByOrderType View
+-- Jenna Grossmann: ProfitByPizza View
+
 CREATE OR REPLACE VIEW ToppingPopularity AS
     SELECT T.TopName,
            SUM(CASE WHEN PT.IsDouble = 1 THEN 2
