@@ -54,7 +54,7 @@ INSERT INTO pizza_topping VALUES(1, 2, 0);
 INSERT INTO pizza_discount VALUES(1, 3);
 
 # Order 2
-INSERT INTO ordertable VALUES(2, 'dinein','2025-04-03 12:05', 19.73, 4.63, TRUE, NULL);
+INSERT INTO ordertable VALUES(2, 'dinein','2025-04-03 12:05', 19.78, 4.63, TRUE, NULL);
 INSERT INTO dinein VALUES(2, 4);
 INSERT INTO pizza VALUES(2, 'Medium', 'Pan', 'completed', '2025-04-03 12:05', 12.85, 3.23, 2);
 INSERT INTO pizza_topping VALUES(2, 15, 0);
@@ -94,7 +94,7 @@ INSERT INTO pizza_topping VALUES(9, 13, 0);
 INSERT INTO pizza_topping VALUES(9, 1, 0);
 
 # Order 4
-INSERT INTO ordertable VALUES(4, 'delivery', '2025-04-20 19:11', 68.96, 20.99, TRUE, 1);
+INSERT INTO ordertable VALUES(4, 'delivery', '2025-04-20 19:11', 68.95, 20.99, TRUE, 1);
 INSERT INTO delivery VALUES(4, 115, 'Party Blvd', 'Anderson', 'SC', 29621, TRUE);
 INSERT INTO pizza VALUES(10, 'XLarge', 'Original', 'completed', '2025-04-20 19:11', 27.94, 9.19, 4);
 INSERT INTO pizza_topping VALUES(10, 14, 0);
@@ -137,7 +137,7 @@ INSERT INTO pizza_topping VALUES(14, 14, 1);
 
 # Order 7
 INSERT INTO customer VALUES(4, 'Milo', 'Auckerman', '8648785679');
-INSERT INTO ordertable VALUES(7, 'delivery','2025-04-13 20:32',31.67, 6, TRUE, 4);
+INSERT INTO ordertable VALUES(7, 'delivery','2025-04-13 20:32',31.66, 6, TRUE, 4);
 INSERT INTO delivery VALUES(7, 8879, 'Suburban', 'Anderson','SC', 29621, TRUE);
 INSERT INTO pizza VALUES(15, 'Large', 'Thin', 'completed','2025-04-13 20:32', 18, 2.75, 7 );
 INSERT INTO pizza_topping VALUES(15, 14, 1);

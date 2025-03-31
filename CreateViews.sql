@@ -15,7 +15,8 @@ CREATE OR REPLACE VIEW PizzaDB.ToppingPopularity AS
 
 # View 2
 CREATE OR REPLACE VIEW PizzaDB.ProfitByPizza AS
-    SELECT B.pizza_Size, B.pizza_CrustType AS Crust,
+    SELECT B.pizza_Size AS Size,
+           B.pizza_CrustType AS Crust,
            SUM(B.pizza_CustPrice-B.pizza_BusPrice) AS Profit, DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y') AS OrderMonth
     FROM pizza B
     LEFT JOIN ordertable OT ON B.ordertable_OrderID = OT.ordertable_OrderID
