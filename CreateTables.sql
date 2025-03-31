@@ -60,15 +60,15 @@ CREATE TABLE baseprice (
 
 CREATE TABLE pizza (
     pizza_PizzaID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    baseprice_Size VARCHAR(30) NOT NULL,
-    baseprice_CrustType VARCHAR(30) NOT NULL,
+    pizza_Size VARCHAR(30) NOT NULL,
+    pizza_CrustType VARCHAR(30) NOT NULL,
     pizza_PizzaState VARCHAR(30) NOT NULL,
     pizza_PizzaDate DATETIME NOT NULL,
     pizza_CustPrice DECIMAL(5,2) NOT NULL,
     pizza_BusPrice DECIMAL(5,2) NOT NULL,
     ordertable_OrderID INT NOT NULL,
     CONSTRAINT `pizza_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`),
-    CONSTRAINT pizzaFK_SizeCrust FOREIGN KEY (baseprice_Size, baseprice_CrustType)
+    CONSTRAINT pizzaFK_SizeCrust FOREIGN KEY (pizza_Size, pizza_CrustType)
     REFERENCES baseprice(baseprice_Size, baseprice_CrustType)
 );
 
