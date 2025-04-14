@@ -199,22 +199,24 @@ public final class DBNinja {
 		 * 
 		*/
 		connect_to_db();
-		ArrayList<Customer> customerList = null;
+		ArrayList<Customer> customerList = new ArrayList<>();
 
 		try {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select customer_CustID, customer_FName, customer_LName From customer;";
+			query = "Select customer_CustID, customer_FName, customer_LName, customer_Phone From customer ORDER BY customer_LName, customer_FName;";
 			os = conn.prepareStatement(query);
-			os.setString(1, phoneNumber);
 			rset = os.executeQuery();
 			while(rset.next())
 			{
 				int id = rset.getInt("customer_CustID");
 				String fname = rset.getString("customer_FName");
-				String lname = rset.getString("customer_LName"); // note the use of field names in the getSting methods
-				customer = new Customer(id, fname, lname, phoneNumber);
+				String lname = rset.getString("customer_LName");
+				String phone = rset.getString("customer_Phone"); // note the use of field names in the getSting methods
+				Customer customer = new Customer(id, fname, lname, phone);
+
+				customerList.add(customer);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
