@@ -54,25 +54,25 @@ CREATE TABLE baseprice (
     baseprice_Size VARCHAR(30) NOT NULL,
     baseprice_CrustType VARCHAR(30) NOT NULL,
     baseprice_CustPrice DECIMAL(5,2) NOT NULL,
-    baseprice_BusPrice DECIMAL(5,2) NOT NULL,
-    PRIMARY KEY (baseprice_Size, baseprice_CrustType)
+    baseprice_BusPrice DECIMAL(5,2) NOT NULL
 );
 
 CREATE TABLE pizza (
     pizza_PizzaID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    pizza_Size VARCHAR(30) NOT NULL,
-    pizza_CrustType VARCHAR(30) NOT NULL,
+    baseprice_Size VARCHAR(30) NOT NULL,
+    baseprice_CrustType VARCHAR(30) NOT NULL,
     pizza_PizzaState VARCHAR(30) NOT NULL,
     pizza_PizzaDate DATETIME NOT NULL,
     pizza_CustPrice DECIMAL(5,2) NOT NULL,
     pizza_BusPrice DECIMAL(5,2) NOT NULL,
     ordertable_OrderID INT NOT NULL,
     CONSTRAINT `pizza_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`),
-    CONSTRAINT pizzaFK_SizeCrust FOREIGN KEY (pizza_Size, pizza_CrustType) REFERENCES baseprice(baseprice_Size, baseprice_CrustType)
+    CONSTRAINT `baseprice_Size` FOREIGN KEY(`baseprice_Size`) REFERENCES baseprice (`baseprice_Size`),
+    CONSTRAINT `baseprice_CrustType` FOREIGN KEY(`baseprice_CrustType`) REFERENCES baseprice (`baseprice_CrustType`)
 );
 
 CREATE TABLE topping (
-    topping_TopID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    topping_TopID INT PRIMARY KEY NOT NULL,
     topping_TopName VARCHAR(30) NOT NULL,
     topping_SmallAMT DECIMAL(5, 2) NOT NULL,
     topping_MedAMT DECIMAL(5, 2) NOT NULL,
@@ -89,29 +89,26 @@ CREATE TABLE pizza_topping (
     topping_TopID INT NOT NULL,
     pizza_topping_IsDouble INT NOT NULL,
     CONSTRAINT `fk_PizzaID` FOREIGN KEY(`pizza_PizzaID`) REFERENCES pizza (`pizza_PizzaID`),
-    CONSTRAINT `fk_TopID` FOREIGN KEY(`topping_TopID`) REFERENCES topping (`topping_TopID`),
-    PRIMARY KEY (pizza_PizzaID, topping_TopID)
+    CONSTRAINT `fk_TopID` FOREIGN KEY(`topping_TopID`) REFERENCES topping (`topping_TopID`)
 );
 
 CREATE TABLE discount (
-    discount_DiscountID INT PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    discount_DiscountID INT PRIMARY KEY NOT NULL,
     discount_DiscountName VARCHAR(30) NOT NULL,
-    discount_Amount DECIMAL(5,2) NOT NULL,
-    discount_IsPercent BOOLEAN NOT NULL
+    discount_Amount DECIMAL(5,2),
+    discount_IsPercent BOOLEAN
 );
 
 CREATE TABLE pizza_discount (
     pizza_PizzaID INT NOT NULL,
     discount_DiscountID INT NOT NULL,
     CONSTRAINT `PizzaID` FOREIGN KEY(`pizza_PizzaID`) REFERENCES pizza(`pizza_PizzaID`),
-    CONSTRAINT `DiscountID` FOREIGN KEY(`discount_DiscountID`) REFERENCES discount(`discount_DiscountID`),
-    PRIMARY KEY (pizza_PizzaID, discount_DiscountID)
+    CONSTRAINT `DiscountID` FOREIGN KEY(`discount_DiscountID`) REFERENCES discount(`discount_DiscountID`)
 );
 
 CREATE TABLE order_discount (
     ordertable_OrderID INT NOT NULL,
     discount_DiscountID INT NOT NULL,
     CONSTRAINT `fk_OrderID` FOREIGN KEY(`ordertable_OrderID`) REFERENCES ordertable (`ordertable_OrderID`),
-    CONSTRAINT `fk_DiscountID` FOREIGN KEY(`discount_DiscountID`) REFERENCES discount (`discount_DiscountID`),
-    PRIMARY KEY (ordertable_OrderID, discount_DiscountID)
+    CONSTRAINT `fk_DiscountID` FOREIGN KEY(`discount_DiscountID`) REFERENCES discount (`discount_DiscountID`)
 );
