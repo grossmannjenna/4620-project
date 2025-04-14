@@ -15,9 +15,9 @@ import java.util.ArrayList;
 public class DBConnector {
 
     // enter your user name here
-    protected static String user = "root";
+    protected static String user = "dbtester";
     // enter your password here
-    protected static String password = "fer6Slix";
+    protected static String password = "CPSC4620";
     // enter your database name here
     private static String database_name = "PizzaDB";
     // Do not change the port. 3306 is the default MySQL port

@@ -336,7 +336,32 @@ public final class DBNinja {
 		 * Don't forget to order the data coming from the database appropriately.
 		 * 
 		 */
-		return null;
+
+		connect_to_db();
+		ArrayList<Topping> toppingList = new ArrayList<>();
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select * From Topping WHERE topping_CurINVT > 0 ORDER BY topping_TopName;";
+			os = conn.prepareStatement(query);
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				int id = rset.getInt("topping_TopID");
+				String name = rset.getString("topping_TopName"); // note the use of field names in the getSting methods
+				Topping topping = new Topping(name);
+				toppingList.add(topping);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		return toppingList;
 	}
 
 	public static Topping findToppingByName(String name) throws SQLException, IOException 
