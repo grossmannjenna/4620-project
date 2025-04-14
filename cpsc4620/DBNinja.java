@@ -198,7 +198,33 @@ public final class DBNinja {
 		 * Don't forget to order the data coming from the database appropriately.
 		 * 
 		*/
-		return null;
+		connect_to_db();
+		ArrayList<Customer> customerList = null;
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select customer_CustID, customer_FName, customer_LName From customer;";
+			os = conn.prepareStatement(query);
+			os.setString(1, phoneNumber);
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				int id = rset.getInt("customer_CustID");
+				String fname = rset.getString("customer_FName");
+				String lname = rset.getString("customer_LName"); // note the use of field names in the getSting methods
+				customer = new Customer(id, fname, lname, phoneNumber);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		return customerList;
+
 	}
 
 	public static Customer findCustomerByPhone(String phoneNumber)  throws SQLException, IOException 
@@ -209,7 +235,33 @@ public final class DBNinja {
 		 * If it's not found....then return null
 		 *  
 		 */
-		 return null;
+		connect_to_db();
+		Customer customer = null;
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select customer_CustID, customer_FName, customer_LName From customer WHERE customer_Phone=?;";
+			os = conn.prepareStatement(query);
+			os.setString(1, phoneNumber);
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				int id = rset.getInt("customer_CustID");
+				String fname = rset.getString("customer_FName");
+				String lname = rset.getString("customer_LName"); // note the use of field names in the getSting methods
+				customer = new Customer(id, fname, lname, phoneNumber);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		return customer;
+
 	}
 
 	public static String getCustomerName(int CustID) throws SQLException, IOException 
