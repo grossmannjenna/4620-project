@@ -350,8 +350,17 @@ public final class DBNinja {
 			while(rset.next())
 			{
 				int id = rset.getInt("topping_TopID");
-				String name = rset.getString("topping_TopName"); // note the use of field names in the getSting methods
-				Topping topping = new Topping(name);
+				String name = rset.getString("topping_TopName");
+				double small = rset.getDouble("topping_SmallAMT");
+				double med = rset.getDouble("topping_MedAMT");
+				double large = rset.getDouble("topping_LgAMT");
+				double xl = rset.getDouble("topping_XLAMT");
+				double custP = rset.getDouble("topping_CustPrice");
+				double busP = rset.getDouble("topping_BusPrice");
+				int min = rset.getInt("topping_MinINVT");
+				int cur = rset.getInt("topping_CurINVT");
+				Topping topping = new Topping(id, name, small, med, large, xl, custP, busP, min, cur);
+
 				toppingList.add(topping);
 			}
 		} catch (SQLException e) {
