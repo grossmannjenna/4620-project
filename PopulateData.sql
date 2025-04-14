@@ -45,8 +45,7 @@ INSERT INTO discount VALUES(5, 'Happy Hour', 10, TRUE);
 INSERT INTO discount VALUES(6, 'Gameday Special', 20, TRUE);
 
 # Order 1
-INSERT INTO customer VALUES(1, '', '', '');
-INSERT INTO ordertable VALUES(1, 'dinein', '2025-03-05 12:03', 19.75, 3.68, TRUE, 1);
+INSERT INTO ordertable VALUES(1, 'dinein', '2025-03-05 12:03', 19.75, 3.68, TRUE, NULL);
 INSERT INTO dinein VALUES(1, 21);
 INSERT INTO pizza VALUES(1, 'Large', 'Thin', 'completed', '2025-03-05 12:03', 19.75, 3.68, 1);
 INSERT INTO pizza_topping VALUES(1, 13, 1);
@@ -55,8 +54,7 @@ INSERT INTO pizza_topping VALUES(1, 2, 0);
 INSERT INTO pizza_discount VALUES(1, 3);
 
 # Order 2
-INSERT INTO customer VALUES(2, '', '', '');
-INSERT INTO ordertable VALUES(2, 'dinein','2025-04-03 12:05', 19.73, 4.63, TRUE, 2);
+INSERT INTO ordertable VALUES(2, 'dinein','2025-04-03 12:05', 19.78, 4.63, TRUE, NULL);
 INSERT INTO dinein VALUES(2, 4);
 INSERT INTO pizza VALUES(2, 'Medium', 'Pan', 'completed', '2025-04-03 12:05', 12.85, 3.23, 2);
 INSERT INTO pizza_topping VALUES(2, 15, 0);
@@ -73,8 +71,8 @@ INSERT INTO pizza_topping VALUES(3, 4, 0);
 INSERT INTO pizza_topping VALUES(3, 12, 0);
 
 # Order 3
-INSERT INTO customer VALUES(3, 'Andrew', 'Wilkes-Krier', '864-254-5861');
-INSERT INTO ordertable VALUES(3, 'pickup', '2025-03-03 21:30', 89.28, 19.80, TRUE, 3);
+INSERT INTO customer VALUES(1, 'Andrew', 'Wilkes-Krier', '8642545861');
+INSERT INTO ordertable VALUES(3, 'pickup', '2025-03-03 21:30', 89.28, 19.80, TRUE, 1);
 INSERT INTO pickup VALUES(3, TRUE);
 INSERT INTO pizza VALUES(4, 'Large', 'Original', 'completed', '2025-03-03 21:30', 14.88, 3.30, 3);
 INSERT INTO pizza_topping VALUES(4, 13, 0);
@@ -96,7 +94,7 @@ INSERT INTO pizza_topping VALUES(9, 13, 0);
 INSERT INTO pizza_topping VALUES(9, 1, 0);
 
 # Order 4
-INSERT INTO ordertable VALUES(4, 'delivery', '2025-04-20 19:11', 68.96, 20.99, TRUE, 3);
+INSERT INTO ordertable VALUES(4, 'delivery', '2025-04-20 19:11', 68.95, 20.99, TRUE, 1);
 INSERT INTO delivery VALUES(4, 115, 'Party Blvd', 'Anderson', 'SC', 29621, TRUE);
 INSERT INTO pizza VALUES(10, 'XLarge', 'Original', 'completed', '2025-04-20 19:11', 27.94, 9.19, 4);
 INSERT INTO pizza_topping VALUES(10, 14, 0);
@@ -114,8 +112,8 @@ INSERT INTO order_discount VALUES(4, 6);
 INSERT INTO pizza_discount VALUES(12, 4);
 
 # Order 5
-INSERT INTO customer VALUES(4, 'Matt', 'Engers', '864-474-9953');
-INSERT INTO ordertable VALUES(5, 'pickup', '2025-03-02 17:30', 28.70, 7.84, TRUE, 4);
+INSERT INTO customer VALUES(2, 'Matt', 'Engers', '8644749953');
+INSERT INTO ordertable VALUES(5, 'pickup', '2025-03-02 17:30', 28.70, 7.84, TRUE, 2);
 INSERT INTO pickup VALUES(5, TRUE);
 INSERT INTO pizza VALUES(13, 'XLarge', 'Gluten-Free', 'completed', '2025-03-02 17:30', 28.70, 7.84, 5);
 INSERT INTO pizza_topping VALUES(13, 16, 0);
@@ -127,8 +125,8 @@ INSERT INTO pizza_topping VALUES(13, 9, 0);
 INSERT INTO pizza_discount VALUES(13, 4);
 
 # Order 6
-INSERT INTO customer VALUES(5, 'Frank', 'Turner', '864-232-8944');
-INSERT INTO ordertable VALUES(6, 'delivery','2025-03-02 18:17',25.81, 3.64, TRUE, 5);
+INSERT INTO customer VALUES(3, 'Frank', 'Turner', '8642328944');
+INSERT INTO ordertable VALUES(6, 'delivery','2025-03-02 18:17',25.81, 3.64, TRUE, 3);
 INSERT INTO delivery VALUES(6, 6745, 'Wessex St', 'Anderson','SC', 29621, TRUE);
 INSERT INTO pizza VALUES(14, 'Large', 'Thin', 'completed','2025-03-02 18:17', 25.81, 3.64, 6 );
 INSERT INTO pizza_topping VALUES(14, 4, 0);
@@ -138,8 +136,8 @@ INSERT INTO pizza_topping VALUES(14, 8, 0);
 INSERT INTO pizza_topping VALUES(14, 14, 1);
 
 # Order 7
-INSERT INTO customer VALUES(6, 'Milo', 'Auckerman', '864-878-5679');
-INSERT INTO ordertable VALUES(7, 'delivery','2025-04-13 20:32',31.67, 6, TRUE, 6);
+INSERT INTO customer VALUES(4, 'Milo', 'Auckerman', '8648785679');
+INSERT INTO ordertable VALUES(7, 'delivery','2025-04-13 20:32',31.66, 6, TRUE, 4);
 INSERT INTO delivery VALUES(7, 8879, 'Suburban', 'Anderson','SC', 29621, TRUE);
 INSERT INTO pizza VALUES(15, 'Large', 'Thin', 'completed','2025-04-13 20:32', 18, 2.75, 7 );
 INSERT INTO pizza_topping VALUES(15, 14, 1);
