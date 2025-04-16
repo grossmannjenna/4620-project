@@ -475,7 +475,31 @@ public final class DBNinja {
 		 * Query the database fro the base customer price for that size and crust pizza.
 		 * 
 		*/
-		return 0.0;
+		connect_to_db();
+		double price = 0.0;
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select pizza_CustPrice From Pizza WHERE pizza_Size=? AND pizza_CrustType=?;";
+			os = conn.prepareStatement(query);
+			os.setString(1, size);
+			os.setString(2, crust);
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				double custPrice = rset.getDouble("pizza_custPrice");
+				price = custPrice;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		return price;
 	}
 
 	public static double getBaseBusPrice(String size, String crust) throws SQLException, IOException 
@@ -484,7 +508,31 @@ public final class DBNinja {
 		 * Query the database fro the base business price for that size and crust pizza.
 		 * 
 		*/
-		return 0.0;
+		connect_to_db();
+		double price = 0.0;
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select pizza_BusPrice From Pizza WHERE pizza_Size=? AND pizza_CrustType=?;";
+			os = conn.prepareStatement(query);
+			os.setString(1, size);
+			os.setString(2, crust);
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				double busPrice = rset.getDouble("pizza_busPrice");
+				price = busPrice;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		return price;
 	}
 
 	
