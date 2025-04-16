@@ -381,7 +381,44 @@ public final class DBNinja {
 		 * If it's not found....then return null
 		 *  
 		 */
-		 return null;
+		connect_to_db();
+		Topping topping = null;
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select * From Topping Where Topping_CurINVT > 0 ORDER BY Topping_TopName;";
+			os = conn.prepareStatement(query);
+			os.setString(1, name);
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				int id = rset.getInt("topping_TopID");
+				String toppingName = rset.getString("topping_TopName");
+				double small = rset.getDouble("topping_SmallAMT");
+				double med = rset.getDouble("topping_MedAMT");
+				double large = rset.getDouble("topping_LgAMT");
+				double xl = rset.getDouble("topping_XLAMT");
+				double custP = rset.getDouble("topping_CustPrice");
+				double busP = rset.getDouble("topping_BusPrice");
+				int min = rset.getInt("topping_MinINVT");
+				int cur = rset.getInt("topping_CurINVT");
+				topping = new Topping(id, name, small, med, large, xl, custP, busP, min, cur);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		if (topping != null) {
+			return topping;
+		} else {
+			return null;
+		}
 	}
 
 	public static ArrayList<Topping> getToppingsOnPizza(Pizza p) throws SQLException, IOException 
