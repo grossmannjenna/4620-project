@@ -12,7 +12,7 @@ import java.util.*;
  * The class has several hard coded static variables used for the connection, you will need to
  * change those to your connection information
  * 
- * This class also has static string variables for pickup, delivery and dine-in. 
+ * This class also has static string for pickup, delivery and dine-in.
  * DO NOT change these constant values.
  * 
  * You can add any helper methods you need, but you must implement all the methods
@@ -109,6 +109,30 @@ public final class DBNinja {
 		 * This method adds a new customer to the database.
 		 * 
 		 */
+		// need to add getter methods for the fields
+		 connect_to_db();
+
+		 try {
+			 PreparedStatement os;
+			 ResultSet rset;
+			 String query = "INSERT INTO customer (customer_Fname, customer_Lname, customer_PhoneNum)" +
+					 "VALUES (?, ?, ?)";
+			 os = conn.prepareStatement(query);
+
+			 os.setString(1, c.getFName());
+			 os.setString(2, c.getLName());
+			 os.setString(3, c.getPhoneNum());
+			 rset = os.executeQuery();
+			 while(rset.next())
+			 {
+				cname = rset.get;
+			 }
+		 } catch (SQLException e) {
+			 e.printStackTrace();
+			 // process the error or re-raise the exception to a higher level
+		 }
+
+		 conn.close();
 
 		 return -1;
 	}
@@ -123,8 +147,10 @@ public final class DBNinja {
 		 * For newState = PREPARED: mark the order and all associated pizza's as completed
 		 * For newState = DELIVERED: mark the delivery status
 		 * FOR newState = PICKEDUP: mark the pickup status
-		 * 
+		 *
 		 */
+		ALTER TABLE ordertable MODIFY isComplete(1)
+		WHERE OrderID is OrderID
 
 	}
 
@@ -149,14 +175,44 @@ public final class DBNinja {
 		return null;
 	}
 	
-	public static Order getLastOrder() throws SQLException, IOException 
+	// COMPLETE- JENNA
+	public static Order getLastOrder() throws SQLException, IOException
 	{
 		/*
 		 * Query the database for the LAST order added
 		 * then return an Order object for that order.
 		 * NOTE...there will ALWAYS be a "last order"!
 		 */
-		 return null;
+		connect_to_db();
+		Order order = null;
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "SELECT * From ordertable ORDER BY OrderDateTime DESC LIMIT 1;";
+			os = conn.prepareStatement(query);
+			rset = os.executeQuery();
+			while (rset.next())
+			{
+				int orderid = rset.getInt("orderTable_OrderID");
+				string type = rset.getString("ordertable_OrderType");
+				DATETIME datetime = rset.getDatetime("ordertable_OrderDateTime");
+				decimal custprice = rset.getDecimal("ordertable_CustPrice");
+				decimal busprice = rset.getDecimal("ordertable_BusPrice");
+				boolean complete = rset.getBoolean("ordertable_isComplete");
+				int custid = rset.getInt("customer_CustID");
+				order = new Order(orderid, type, datetime, custprice, busprice, complete, custid);
+
+			}
+		} catch(SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		 return order;
 	}
 
 	public static ArrayList<Order> getOrdersByDate(String date) throws SQLException, IOException
@@ -321,9 +377,9 @@ public final class DBNinja {
 
 		conn.close();
 
-		return cname1;
+		//return cname1;
 		// OR
-		// return cname2;
+		 return cname2;
 
 	}
 
@@ -388,7 +444,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From Topping Where Topping_CurINVT > 0 ORDER BY Topping_TopName;";
+			query = "Select * From Topping Where Topping_CurINVT > 0 ORDER BY Topdping_TopName;";
 			os = conn.prepareStatement(query);
 			os.setString(1, name);
 			rset = os.executeQuery();
