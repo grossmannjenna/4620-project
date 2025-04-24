@@ -102,14 +102,15 @@ public final class DBNinja {
 
 		return -1;
 	}
-	
+
+	// IN PROGRESS- NEED GET METHODS FOR FIELDS
 	public static int addCustomer(Customer c) throws SQLException, IOException
 	 {
 		/*
 		 * This method adds a new customer to the database.
 		 * 
 		 */
-		// need to add getter methods for the fields
+		
 		 connect_to_db();
 
 		 try {
@@ -122,11 +123,7 @@ public final class DBNinja {
 			 os.setString(1, c.getFName());
 			 os.setString(2, c.getLName());
 			 os.setString(3, c.getPhoneNum());
-			 rset = os.executeQuery();
-			 while(rset.next())
-			 {
-				cname = rset.get;
-			 }
+			 os.executeUpdate();
 		 } catch (SQLException e) {
 			 e.printStackTrace();
 			 // process the error or re-raise the exception to a higher level
@@ -134,9 +131,12 @@ public final class DBNinja {
 
 		 conn.close();
 
+
+		 //return new customer's ID
 		 return -1;
 	}
 
+	//IN PROGRESS- JENNA
 	public static void completeOrder(int OrderID, order_state newState ) throws SQLException, IOException
 	{
 		/*
@@ -149,8 +149,9 @@ public final class DBNinja {
 		 * FOR newState = PICKEDUP: mark the pickup status
 		 *
 		 */
-		ALTER TABLE ordertable MODIFY isComplete(1)
-		WHERE OrderID is OrderID
+			connect_to_db();
+
+			String query = ""
 
 	}
 
@@ -172,6 +173,7 @@ public final class DBNinja {
 	 * Don't forget to order the data coming from the database appropriately.
 	 *
 	 */
+
 		return null;
 	}
 	
@@ -215,6 +217,7 @@ public final class DBNinja {
 		 return order;
 	}
 
+	// COMPLETE - Jenna
 	public static ArrayList<Order> getOrdersByDate(String date) throws SQLException, IOException
 	 {
 		/*
@@ -223,8 +226,43 @@ public final class DBNinja {
 		 *  
 		 */
 		 return null;
+
+		 connect_to_db();
+
+		 ArrayList<ordertable> orderList = new ArrayList<>();
+
+		 try{
+			 PreparedStatement ps;
+			 ResultSet rset;
+			 String query;
+			 query = "Select ordertable_OrderID, ordertable_OrderType,"
+					 + "ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID" +
+					 "From ordertable Where ordertable_OrderDateTime = ?;";
+			 ps.conn.prepareStatement(query);
+			 ps.setString(1, date);
+			 rset = ps.executeQuery();
+			 while(rset.next())
+			 {
+				 int id = rset.getInt("ordertable_OrderID");
+				 String ordertype = rset.getString("ordertable_OrderType");
+				 decimal custprice = rset.getdecimal("ordertable_CustPrice");
+				 decimal busprice = rset.getdecimal("ordertable_BusPrice");
+				 boolean complete = rset.getBoolean("ordertable_isComplete");
+				 int cusid = rset.getInt("customer_CustID");
+				 ordertable order = new ordertable(id, ordertype, date, cusprice, busprice, complete, cusid);
+				 orderList.add(order);
+			 }
+		 } catch (SQLException e) {
+			 e.printStackTrace();
+			 // process the error or re-raise the exception to a higher level
+		 }
+
+		 conn.close();
+
+		 return orderList;
 	}
-		
+
+	//COMPLETE -Jenna
 	public static ArrayList<Discount> getDiscountList() throws SQLException, IOException 
 	{
 		/* 
@@ -232,9 +270,38 @@ public final class DBNinja {
 		 * return them in an arrayList of discounts ordered by discount name.
 		 * 
 		*/
-		return null;
+		connect_to_db();
+		ArrayList<Discount> discountList = new ArrayList<>();
+
+		try {
+			PreparedStatement ps;
+			ResultSet rset;
+			String query;
+			query = "Select discount_DiscountID, discount_DiscountName, discount_Amount, discount_IsPercent From discount" +
+					"ORDER BY discount_DiscountName;";
+			ps = conn.prepareStatement(query);
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				int id = rset.getInt("dicount_DiscountID");
+				String name = rset.getString("discount_DiscountName");
+				Decimal amount = rset.getDecimal("discount_Amount");
+				Boolean ispercent = rset.getBoolean("discount_IsPercent");
+				Discount discount = new Discount(id, name, amount, ispercent);
+
+				discountList.add(discount);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		return discountList;
 	}
 
+	//COMPLETE - Jenna
 	public static Discount findDiscountByName(String name) throws SQLException, IOException 
 	{
 		/*
@@ -243,7 +310,34 @@ public final class DBNinja {
 		 * If it's not found....then return null
 		 *  
 		 */
-		 return null;
+		connect_to_db();
+		Discount discount = null;
+
+		try {
+			PreparedStatement ps;
+			ResultSet rset;
+			String query;
+			query = "Select discount_DiscountID, discount_DiscountName, discount_Amount, discount_IsPercent" +
+					"from Discount Where discount_DiscountName=?;";
+			ps = conn.prepareStatement(query);
+			ps.setString(1, discountname);
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				int id = rset.getInt("discount_DiscountID");
+				String name = rset.getString("discount_DiscountName");
+				Decimal amount = rset.getDecimal("discount_Amount");
+				Boolean ispercent = rset.getBoolean("discount_IsPercent");
+				discount = new Discount(id, name, amount, ispercent);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+
+		conn.close();
+		return discount;
 	}
 
 
