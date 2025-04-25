@@ -341,6 +341,7 @@ public final class DBNinja {
 	}
 
 
+	//COMPLETE - ELLE
 	public static ArrayList<Customer> getCustomerList() throws SQLException, IOException 
 	{
 		/*
@@ -379,6 +380,7 @@ public final class DBNinja {
 
 	}
 
+	// COMPLETE - ELLE
 	public static Customer findCustomerByPhone(String phoneNumber)  throws SQLException, IOException 
 	{
 		/*
@@ -478,6 +480,7 @@ public final class DBNinja {
 	}
 
 
+	//COMPLETE - ELLE
 	public static ArrayList<Topping> getToppingList() throws SQLException, IOException 
 	{
 		/*
@@ -523,6 +526,7 @@ public final class DBNinja {
 		return toppingList;
 	}
 
+	//COMPLETE - ELLE
 	public static Topping findToppingByName(String name) throws SQLException, IOException 
 	{
 		/*
@@ -578,7 +582,31 @@ public final class DBNinja {
 		 * The list can then be added to the Pizza object elsewhere in the
 		 */
 
-		return null;	
+		connect_to_db();
+		ArrayList<Topping> pizzaTopping = new ArrayList<>();
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select Topping. From Pizza;";
+			os = conn.prepareStatement(query);
+			os.setObject(0, p);
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				Pizza pizzaTop = rset.getObject("Toppings");
+
+				pizzaTopping.add(pizzaTopping);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		return pizzaTopping;
 	}
 
 	public static void addToInventory(int toppingID, double quantity) throws SQLException, IOException 
@@ -615,10 +643,12 @@ public final class DBNinja {
 		 * Build an array list of all the Discounts associted with the Pizza.
 		 * 
 		 */
+
 	
 		return null;
 	}
 
+	//COMPLETE - ELLE
 	public static double getBaseCustPrice(String size, String crust) throws SQLException, IOException 
 	{
 		/* 
@@ -652,6 +682,7 @@ public final class DBNinja {
 		return price;
 	}
 
+	//COMPLETE - ELLE
 	public static double getBaseBusPrice(String size, String crust) throws SQLException, IOException 
 	{
 		/* 
