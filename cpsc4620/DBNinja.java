@@ -786,12 +786,12 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From ToppingPopularity ORDER BY ToppingCount DESC;";
+			query = "Select * From ToppingPopularity ORDER BY ToppingCount DESC TopName ASC;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 
 			System.out.printf("%-20s %-20s\n", "Topping", "Topping Count");
-			System.out.printf("%-20s %-20s\n", "-------", "--------------");
+			System.out.printf("%-20s %-20s\n", "-------", "-------------");
 
 			while(rset.next()) {
 
@@ -807,7 +807,8 @@ public final class DBNinja {
 
 		conn.close();
 	}
-	
+
+	// COMPLETED - ELLE
 	public static void printProfitByPizzaReport() throws SQLException, IOException 
 	{
 		/*
@@ -823,6 +824,34 @@ public final class DBNinja {
 		 * better.
 		 * 
 		 */
+		connect_to_db();
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select * From ProfitByPizza ORDER BY Profit;";
+			os = conn.prepareStatement(query);
+			rset = os.executeQuery();
+
+			System.out.printf("%-15s %-15s %-10s %-20s\n", "Pizza Size", "Pizza Crust", "Profit", "Last Order Date");
+			System.out.printf("%-15s %-15s %-10s %-20s\n", "----------", "-----------", "------", "---------------");
+
+			while(rset.next()) {
+
+				String size = rset.getString("PizzaSize");
+				String crust = rset.getString("PizzaCrust");
+				double profit = rset.getDouble("Profit");
+				String date = rset.getString("LastOrderDate");
+
+				System.out.printf("%-15s %-15s %-9.2f %-20s\n", size, crust, profit, date);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		conn.close();
 	}
 	
 	public static void printProfitByOrderTypeReport() throws SQLException, IOException
