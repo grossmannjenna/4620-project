@@ -576,7 +576,7 @@ public final class DBNinja {
 		}
 	}
 
-	// COMPLETE - ELLE
+	// IN PROGRESS - ELLE
 	public static ArrayList<Topping> getToppingsOnPizza(Pizza p) throws SQLException, IOException 
 	{
 		/* 
@@ -591,10 +591,10 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select Topping.TopID, TopName, SmallAMT, MedAMT, LgAMT, XLAMT, CustPrice, BusPrice, MinINVT, CurINVT, IsDouble " +
-					"From PizzaToppings" +
-					"JOIN Topping ON PizzaToppings.TopID = Topping.TopID" +
-					"WHERE PizzaToppings.Pizza ID =?;";
+			query = "Select t.TopID, t.TopName, t.SmallAMT, t.MedAMT, t.LgAMT, t.XLAMT, t.CustPrice, t.BusPrice, t.MinINVT, t.CurINVT, t.IsDouble " +
+					"From topping t" +
+					"JOIN pizza_topping pt ON t.TopID = pt.TopID" +
+					"WHERE Pizza ID =?;";
 			os = conn.prepareStatement(query);
 			os.setInt(1, p.getPizzaID());
 			rset = os.executeQuery();
@@ -660,7 +660,40 @@ public final class DBNinja {
 		 * 
 		 */
 
-	
+		connect_to_db();
+		ArrayList<Discount> pizzaDiscounts = new ArrayList<>();
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select D.DiscountID, D.DiscountName, D.Amount, D.isPercent" +
+					"From PizzaDiscount PD" +
+					"JOIN Discount D ON PD.DiscountID = D.DiscountID" +
+					"WHERE PD.PizzaID =?;";
+			os = conn.prepareStatement(query);
+			os.setInt(1, p.getPizzaID());
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				Discount dis = new Discount (
+						rset.getInt("DiscountID"),
+						rset.getString("DiscountName"),
+						rset.getDouble("Amount"),
+						rset.getBoolean("IsPercent")
+				);
+				pizzaDiscounts.add(dis);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+		return  pizzaDiscounts;
+
+
+
 		return null;
 	}
 
