@@ -576,7 +576,7 @@ public final class DBNinja {
 		}
 	}
 
-	// IN PROGRESS - ELLE
+	// COMPLETE? - ELLE
 	public static ArrayList<Topping> getToppingsOnPizza(Pizza p) throws SQLException, IOException 
 	{
 		/* 
@@ -653,6 +653,7 @@ public final class DBNinja {
 		return null;
 	}
 
+	// COMPLETE - ELLE
 	public static ArrayList<Discount> getDiscounts(Pizza p) throws SQLException, IOException 
 	{
 		/* 
@@ -692,9 +693,6 @@ public final class DBNinja {
 		conn.close();
 		return  pizzaDiscounts;
 
-
-
-		return null;
 	}
 
 	// COMPLETE - ELLE
