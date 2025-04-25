@@ -650,36 +650,129 @@ public final class DBNinja {
 		conn.close();
 	}
 	
-	
+	// COMPLETE -Jenna
 	public static ArrayList<Pizza> getPizzas(Order o) throws SQLException, IOException 
 	{
 		/*
 		 * Build an ArrayList of all the Pizzas associated with the Order.
 		 * 
 		 */
-		return null;
+		connect_to_db();
+		ArrayList<Pizza> pizzas = new ArrayList<>();
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "SELECT pizza_PizzaID, pizza_baseprice_Size, pizza_baseprice_CrustType," +
+					"pizza_PizzaState, pizza_PizzaDate, pizza_CustPrice,pizza_BusPrice, " +
+					"ordertable_OrderID from pizza" +
+					"JOIN ordertable ON pizza.ordertable_OrderID = ordertable.ordertable_OrderID" +
+					"WHERE pizza.ordertable_OrderID = ?;";
+			os.conn.prepareStatement(query);
+			os.setInt(1, o.getOrderID());
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				pizza pizza = new pizza (
+						rset.getInt("pizza_PizzaID");
+						rset.getString("pizza_baseprice_Size");
+						rset.getString("pizza_baseprice_CrustType");
+						rset.getString("pizza_PizzaState");
+						rset.getTimestamp("pizza_PizzaDate");
+						rset.getBigDecimal("pizza_CustPrice");
+						rset.getBigDecimal("pizza_BusPrice");
+						rset.getInt("ordertable_OrderID");
+				);
+				pizzas.add(pizza);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
+		return pizzas;
 	}
 
+	//COMPLETE -Jenna
 	public static ArrayList<Discount> getDiscounts(Order o) throws SQLException, IOException 
 	{
 		/* 
 		 * Build an array list of all the Discounts associted with the Order.
 		 * 
 		 */
+		connect_to_db();
+		ArrayList<discount> discounts = new ArrayList<>();
 
-		return null;
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "SELECT discount_DiscountID, discount_DiscountName, discount_Amount, discountIsPercent" +
+					"from discount" +
+					"JOIN order_discount ON discount.discount_DiscountID = order_discount.ordertable_OrderID" +
+					"WHERE order_discount.ordertable_OrderID = ?;";
+			os.conn.prepareStatement(query);
+			os.setInt(1, o.getOrderID());
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				discount disc = new discount (
+						rset.getInt("discount_DiscountID");
+						rset.getString("discount_DiscountName");
+						rset.getBigDecimal("discount_Amount");
+						rset.getBoolean("discount_IsPercent");
+				);
+				discounts.add(disc);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				// process the error or re-raise the exception to a higher level
+			}
+			conn.close();
+
+		return discounts;
 	}
 
+	//COMPLETE -Jenna
 	public static ArrayList<Discount> getDiscounts(Pizza p) throws SQLException, IOException 
 	{
 		/* 
 		 * Build an array list of all the Discounts associted with the Pizza.
 		 * 
 		 */
+		connect_to_db();
+		ArrayList<discount> discounts = new ArrayList<>();
 
-	
-		return null;
-	}
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "SELECT discount_DiscountID, discount_DiscountName, discount_Amount, discountIsPercent" +
+					"from discount" +
+					"JOIN pizza_discount ON discount.discount_DiscountID = pizza_discount.pizza_OrderID" +
+					"WHERE pizza_discount.pizza_OrderID = ?;";
+			os.conn.prepareStatement(query);
+			os.setInt(1, o.getPizzaID());
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				discount disc = new discount (
+						rset.getInt("discount_DiscountID");
+				rset.getString("discount_DiscountName");
+				rset.getBigDecimal("discount_Amount");
+				rset.getBoolean("discount_IsPercent");
+				);
+				discounts.add(disc);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				// process the error or re-raise the exception to a higher level
+			}
+			conn.close();
+
+		}
 
 	// COMPLETE - ELLE
 	public static double getBaseCustPrice(String size, String crust) throws SQLException, IOException 
