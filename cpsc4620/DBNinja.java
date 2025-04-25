@@ -658,7 +658,42 @@ public final class DBNinja {
 		 * Build an ArrayList of all the Pizzas associated with the Order.
 		 * 
 		 */
-		return null;
+		connect_to_db();
+		ArrayList<Pizza> pizzas = new ArrayList<>();
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select *" +
+					"From Pizza" +
+					"WHERE OrderID =?;";
+			os = conn.prepareStatement(query);
+			os.setInt(1, o.getOrderID());
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				Pizza p = new Pizza(
+						rset.getInt("PizzaID"),
+						rset.getString("Size"),
+						rset.getString("CrustType"),
+						rset.getInt("OrderID"),
+						rset.getString("PizzaState"),
+						rset.getString("PizzaDate"),
+						rset.getDouble("CustPrice"),
+						rset.getDouble("BusPrice")
+				);
+
+				pizzas.add(p);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+		return pizzas;
+
 	}
 
 	//COMPLETE ? - ELLE
