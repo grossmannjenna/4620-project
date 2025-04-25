@@ -763,7 +763,7 @@ public final class DBNinja {
 		return price;
 	}
 
-	
+	// COMPLETE - ELLE
 	public static void printToppingReport() throws SQLException, IOException
 	{
 		/*
@@ -779,6 +779,33 @@ public final class DBNinja {
 		 * better.
 		 * 
 		 */
+
+		connect_to_db();
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select * From ToppingPopularity ORDER BY ToppingCount DESC;";
+			os = conn.prepareStatement(query);
+			rset = os.executeQuery();
+
+			System.out.printf("%-20s %-20s\n", "Topping", "Topping Count");
+			System.out.printf("%-20s %-20s\n", "-------", "--------------");
+
+			while(rset.next()) {
+
+				String topName = rset.getString("TopName");
+				int count = rset.getInt("ToppingCount");
+
+				System.out.printf("%-20s %-20s\n", topName, count);
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		conn.close();
 	}
 	
 	public static void printProfitByPizzaReport() throws SQLException, IOException 
