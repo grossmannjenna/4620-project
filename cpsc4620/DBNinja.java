@@ -651,7 +651,7 @@ public final class DBNinja {
 
 	}
 	
-	
+	// COMPLETE ? - ELLE
 	public static ArrayList<Pizza> getPizzas(Order o) throws SQLException, IOException 
 	{
 		/*
