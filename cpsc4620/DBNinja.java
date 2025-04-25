@@ -341,7 +341,7 @@ public final class DBNinja {
 	}
 
 
-	//COMPLETE - ELLE
+	// COMPLETE - ELLE
 	public static ArrayList<Customer> getCustomerList() throws SQLException, IOException 
 	{
 		/*
@@ -481,7 +481,7 @@ public final class DBNinja {
 	}
 
 
-	//COMPLETE - ELLE
+	// COMPLETE - ELLE
 	public static ArrayList<Topping> getToppingList() throws SQLException, IOException 
 	{
 		/*
@@ -527,7 +527,7 @@ public final class DBNinja {
 		return toppingList;
 	}
 
-	//COMPLETE - ELLE
+	// COMPLETE - ELLE
 	public static Topping findToppingByName(String name) throws SQLException, IOException 
 	{
 		/*
@@ -576,7 +576,7 @@ public final class DBNinja {
 		}
 	}
 
-	// IN PROGESS - ELLE
+	// COMPLETE - ELLE
 	public static ArrayList<Topping> getToppingsOnPizza(Pizza p) throws SQLException, IOException 
 	{
 		/* 
@@ -585,21 +585,35 @@ public final class DBNinja {
 		 */
 
 		connect_to_db();
-		ArrayList<Topping> pizzaTopping = new ArrayList<>();
+		ArrayList<Topping> pizzaToppings = new ArrayList<>();
 
 		try {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select Topping. From Pizza;";
+			query = "Select Topping.TopID, TopName, SmallAMT, MedAMT, LgAMT, XLAMT, CustPrice, BusPrice, MinINVT, CurINVT, IsDouble " +
+					"From PizzaToppings" +
+					"JOIN Topping ON PizzaToppings.TopID = Topping.TopID" +
+					"WHERE PizzaToppings.Pizza ID =?;";
 			os = conn.prepareStatement(query);
-			os.setObject(0, p);
+			os.setInt(1, p.getPizzaID());
 			rset = os.executeQuery();
 			while(rset.next())
 			{
-				Pizza pizzaTop = rset.getObject("Toppings");
-
-				pizzaTopping.add(pizzaTopping);
+				Topping top = new Topping (
+						rset.getInt("TopID"),
+						rset.getString("TopName"),
+						rset.getDouble("SmallAMT"),
+						rset.getDouble("MedAMT"),
+						rset.getDouble("LgAMT"),
+						rset.getDouble("XLAMT"),
+						rset.getDouble("CustPrice"),
+						rset.getDouble("BusPrice"),
+						rset.getInt("MinINVT"),
+						rset.getInt("CurINVT")
+				);
+				top.setDoubled(rset.getBoolean("IsDouble"));
+				pizzaToppings.add(top);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -608,7 +622,7 @@ public final class DBNinja {
 
 		conn.close();
 
-		return pizzaTopping;
+		return pizzaToppings;
 	}
 
 	public static void addToInventory(int toppingID, double quantity) throws SQLException, IOException 
@@ -650,7 +664,7 @@ public final class DBNinja {
 		return null;
 	}
 
-	//COMPLETE - ELLE
+	// COMPLETE - ELLE
 	public static double getBaseCustPrice(String size, String crust) throws SQLException, IOException 
 	{
 		/* 
@@ -684,7 +698,7 @@ public final class DBNinja {
 		return price;
 	}
 
-	//COMPLETE - ELLE
+	// COMPLETE - ELLE
 	public static double getBaseBusPrice(String size, String crust) throws SQLException, IOException 
 	{
 		/* 
