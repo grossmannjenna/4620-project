@@ -418,6 +418,7 @@ public final class DBNinja {
 
 	}
 
+	// COMPLETE - GIVEN EXAMPLE
 	public static String getCustomerName(int CustID) throws SQLException, IOException 
 	{
 		/*
@@ -575,6 +576,7 @@ public final class DBNinja {
 		}
 	}
 
+	// IN PROGESS - ELLE
 	public static ArrayList<Topping> getToppingsOnPizza(Pizza p) throws SQLException, IOException 
 	{
 		/* 
