@@ -661,6 +661,7 @@ public final class DBNinja {
 		return null;
 	}
 
+	//COMPLETE ? - ELLE
 	public static ArrayList<Discount> getDiscounts(Order o) throws SQLException, IOException 
 	{
 		/* 
@@ -668,7 +669,37 @@ public final class DBNinja {
 		 * 
 		 */
 
-		return null;
+		connect_to_db();
+		ArrayList<Discount> orderDiscounts = new ArrayList<>();
+
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select D.DiscountID, D.DiscountName, D.Amount, D.isPercent" +
+					"From OrderDiscount OD" +
+					"JOIN Discount D ON OD.DiscountID = D.DiscountID" +
+					"WHERE OD.OrderID =?;";
+			os = conn.prepareStatement(query);
+			os.setInt(1, o.getOrderID());
+			rset = os.executeQuery();
+			while(rset.next())
+			{
+				Discount dis = new Discount (
+						rset.getInt("DiscountID"),
+						rset.getString("DiscountName"),
+						rset.getDouble("Amount"),
+						rset.getBoolean("IsPercent")
+				);
+				orderDiscounts.add(dis);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+		return  orderDiscounts;
 	}
 
 	// COMPLETE - ELLE
