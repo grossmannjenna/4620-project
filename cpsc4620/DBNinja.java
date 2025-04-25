@@ -625,12 +625,30 @@ public final class DBNinja {
 		return pizzaToppings;
 	}
 
+	// COMPLETE - ELLE
 	public static void addToInventory(int toppingID, double quantity) throws SQLException, IOException 
 	{
 		/*
 		 * Updates the quantity of the topping in the database by the amount specified.
 		 * 
 		 * */
+		connect_to_db();
+
+		try {
+			PreparedStatement os;
+			String query;
+			query = "UPDATE Topping SET CurINVT = CurINVT + ? WHERE TopID = ?;";
+			os = conn.prepareStatement(query);
+			os.setDouble(1, quantity);
+			os.setInt(2, toppingID);
+			os.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
+
 	}
 	
 	
