@@ -69,7 +69,7 @@ public final class DBNinja {
 
 	}
 
-	public static void addOrder(order_table o) throws SQLException, IOException
+	public static void addOrder(Order o) throws SQLException, IOException 
 	{
 		/*
 		 * add code to add the order to the DB. Remember that we're not just
@@ -86,7 +86,7 @@ public final class DBNinja {
 		 */
 	}
 	
-	public static int addPizza(java.util.Date d, int orderID, pizza p) throws SQLException, IOException
+	public static int addPizza(java.util.Date d, int orderID, Pizza p) throws SQLException, IOException
 	{
 		/*
 		 * Add the code needed to insert the pizza into into the database.
@@ -104,7 +104,7 @@ public final class DBNinja {
 	}
 
 	// IN PROGRESS- NEED GET METHODS FOR FIELDS
-	public static int addCustomer(customer c) throws SQLException, IOException
+	public static int addCustomer(Customer c) throws SQLException, IOException
 	 {
 		/*
 		 * This method adds a new customer to the database.
@@ -151,12 +151,12 @@ public final class DBNinja {
 		 */
 			connect_to_db();
 
-			String query = "";
+			String query = ""
 
 	}
 
 
-	public static ArrayList<order_table> getOrders(int status) throws SQLException, IOException
+	public static ArrayList<Order> getOrders(int status) throws SQLException, IOException
 	 {
 	/*
 	 * Return an ArrayList of orders.
@@ -178,7 +178,7 @@ public final class DBNinja {
 	}
 	
 	// COMPLETE- JENNA
-	public static order_table getLastOrder() throws SQLException, IOException
+	public static Order getLastOrder() throws SQLException, IOException
 	{
 		/*
 		 * Query the database for the LAST order added
@@ -218,7 +218,7 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - Jenna
-	public static ArrayList<order_table> getOrdersByDate(String date) throws SQLException, IOException
+	public static ArrayList<Order> getOrdersByDate(String date) throws SQLException, IOException
 	 {
 		/*
 		 * Query the database for ALL the orders placed on a specific date
@@ -263,7 +263,7 @@ public final class DBNinja {
 	}
 
 	//COMPLETE -Jenna
-	public static ArrayList<discount> getDiscountList() throws SQLException, IOException
+	public static ArrayList<Discount> getDiscountList() throws SQLException, IOException 
 	{
 		/* 
 		 * Query the database for all the available discounts and 
@@ -302,7 +302,7 @@ public final class DBNinja {
 	}
 
 	//COMPLETE - Jenna
-	public static discount findDiscountByName(String name) throws SQLException, IOException
+	public static Discount findDiscountByName(String name) throws SQLException, IOException 
 	{
 		/*
 		 * Query the database for a discount using it's name.
@@ -342,7 +342,7 @@ public final class DBNinja {
 
 
 	// COMPLETE - ELLE
-	public static ArrayList<customer> getCustomerList() throws SQLException, IOException
+	public static ArrayList<Customer> getCustomerList() throws SQLException, IOException 
 	{
 		/*
 		 * Query the data for all the customers and return an arrayList of all the customers. 
@@ -381,7 +381,7 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - ELLE
-	public static customer findCustomerByPhone(String phoneNumber)  throws SQLException, IOException
+	public static Customer findCustomerByPhone(String phoneNumber)  throws SQLException, IOException 
 	{
 		/*
 		 * Query the database for a customer using a phone number.
@@ -482,7 +482,7 @@ public final class DBNinja {
 
 
 	// COMPLETE - ELLE
-	public static ArrayList<topping> getToppingList() throws SQLException, IOException
+	public static ArrayList<Topping> getToppingList() throws SQLException, IOException 
 	{
 		/*
 		 * Query the database for the aviable toppings and 
@@ -528,7 +528,7 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - ELLE
-	public static topping findToppingByName(String name) throws SQLException, IOException
+	public static Topping findToppingByName(String name) throws SQLException, IOException 
 	{
 		/*
 		 * Query the database for the topping using it's name.
@@ -577,7 +577,7 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - ELLE
-	public static ArrayList<topping> getToppingsOnPizza(pizza p) throws SQLException, IOException
+	public static ArrayList<Topping> getToppingsOnPizza(Pizza p) throws SQLException, IOException 
 	{
 		/* 
 		 * This method builds an ArrayList of the toppings ON a pizza.
@@ -642,7 +642,7 @@ public final class DBNinja {
 			os = conn.prepareStatement(query);
 			os.setDouble(1, quantity);
 			os.setInt(2, toppingID);
-			rset = os.executeQuery();
+			rset = os.executeQuery()
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
@@ -651,7 +651,7 @@ public final class DBNinja {
 	}
 	
 	// COMPLETE -Jenna
-	public static ArrayList<pizza> getPizzas(order_table o) throws SQLException, IOException
+	public static ArrayList<Pizza> getPizzas(Order o) throws SQLException, IOException 
 	{
 		/*
 		 * Build an ArrayList of all the Pizzas associated with the Order.
@@ -675,14 +675,14 @@ public final class DBNinja {
 			while(rset.next())
 			{
 				pizza pizza = new pizza (
-						rset.getInt("pizza_PizzaID"),
-						rset.getString("pizza_baseprice_Size"),
-						rset.getString("pizza_baseprice_CrustType"),
-						rset.getString("pizza_PizzaState"),
-						rset.getTimestamp("pizza_PizzaDate"),
-						rset.getBigDecimal("pizza_CustPrice"),
-						rset.getBigDecimal("pizza_BusPrice"),
-						rset.getInt("ordertable_OrderID")
+						rset.getInt("pizza_PizzaID");
+						rset.getString("pizza_baseprice_Size");
+						rset.getString("pizza_baseprice_CrustType");
+						rset.getString("pizza_PizzaState");
+						rset.getTimestamp("pizza_PizzaDate");
+						rset.getBigDecimal("pizza_CustPrice");
+						rset.getBigDecimal("pizza_BusPrice");
+						rset.getInt("ordertable_OrderID");
 				);
 				pizzas.add(pizza);
 			}
@@ -698,7 +698,7 @@ public final class DBNinja {
 	}
 
 	//COMPLETE -Jenna
-	public static ArrayList<discount> getDiscounts(order_table o) throws SQLException, IOException
+	public static ArrayList<Discount> getDiscounts(Order o) throws SQLException, IOException 
 	{
 		/* 
 		 * Build an array list of all the Discounts associted with the Order.
@@ -721,23 +721,23 @@ public final class DBNinja {
 			while(rset.next())
 			{
 				discount disc = new discount (
-						rset.getInt("discount_DiscountID"),
-						rset.getString("discount_DiscountName"),
-						rset.getBigDecimal("discount_Amount"),
-						rset.getBoolean("discount_IsPercent")
+						rset.getInt("discount_DiscountID");
+						rset.getString("discount_DiscountName");
+						rset.getBigDecimal("discount_Amount");
+						rset.getBoolean("discount_IsPercent");
 				);
 				discounts.add(disc);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				// process the error or re-raise the exception to a higher level
 			}
-		}catch (SQLException e) {
-			e.printStackTrace();
-			// process the error or re-raise the exception to a higher level
 			conn.close();
-		}
+
 		return discounts;
 	}
 
 	//COMPLETE -Jenna
-	public static ArrayList<discount> getDiscounts(pizza p) throws SQLException, IOException
+	public static ArrayList<Discount> getDiscounts(Pizza p) throws SQLException, IOException 
 	{
 		/* 
 		 * Build an array list of all the Discounts associted with the Pizza.
@@ -760,20 +760,19 @@ public final class DBNinja {
 			while(rset.next())
 			{
 				discount disc = new discount (
-						rset.getInt("discount_DiscountID"),
-				rset.getString("discount_DiscountName"),
-				rset.getBigDecimal("discount_Amount"),
-				rset.getBoolean("discount_IsPercent")
+						rset.getInt("discount_DiscountID");
+				rset.getString("discount_DiscountName");
+				rset.getBigDecimal("discount_Amount");
+				rset.getBoolean("discount_IsPercent");
 				);
 				discounts.add(disc);
+			} catch (SQLException e) {
+				e.printStackTrace();
+				// process the error or re-raise the exception to a higher level
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			// process the error or re-raise the exception to a higher level
-		}
 			conn.close();
 
-	}
+		}
 
 	// COMPLETE - ELLE
 	public static double getBaseCustPrice(String size, String crust) throws SQLException, IOException 
