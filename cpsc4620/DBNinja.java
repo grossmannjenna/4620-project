@@ -103,7 +103,7 @@ public final class DBNinja {
 		return -1;
 	}
 
-	// IN PROGRESS- NEED GET METHODS FOR FIELDS
+	// COMPLETE -Jenna
 	public static int addCustomer(Customer c) throws SQLException, IOException
 	 {
 		/*
@@ -112,10 +112,10 @@ public final class DBNinja {
 		 */
 		
 		 connect_to_db();
+		 int newCustID;
 
 		 try {
 			 PreparedStatement os;
-			 ResultSet rset;
 			 String query = "INSERT INTO customer (customer_Fname, customer_Lname, customer_PhoneNum)" +
 					 "VALUES (?, ?, ?)";
 			 os = conn.prepareStatement(query);
@@ -124,6 +124,12 @@ public final class DBNinja {
 			 os.setString(2, c.getLName());
 			 os.setString(3, c.getPhoneNum());
 			 os.executeUpdate();
+
+			 try(ResultSet generatedKey = os.getGeneratedKeys()) {
+					 if(generatedKey.next()) {
+						 int newCustID = generatedKey.getInt(1);
+					 }
+			 }
 		 } catch (SQLException e) {
 			 e.printStackTrace();
 			 // process the error or re-raise the exception to a higher level
@@ -131,12 +137,11 @@ public final class DBNinja {
 
 		 conn.close();
 
-
 		 //return new customer's ID
-		 return -1;
+		 return newCustID;
 	}
 
-	//IN PROGRESS- JENNA
+	//COMPLETE- JENNA
 	public static void completeOrder(int OrderID, order_state newState ) throws SQLException, IOException
 	{
 		/*
@@ -151,8 +156,42 @@ public final class DBNinja {
 		 */
 			connect_to_db();
 
-			String query = ""
+			try {
+				PreparedStatement os;
 
+				// change pizza statuses
+				if(newState == order_state.PREPARED) {
+
+					// mark order as complete
+					String Orderquery = "UPDATE ordertable SET ordertable_isComplete = 1 " +
+							"WHERE ordertable_OrderID = ?;";
+					os = conn.prepareStatement(Orderquery);
+					os.setInt(1, OrderID);
+					os.executeUpdate();
+
+					// mark pizzas as complete- keeping as separate in case it should be marked as "complete" instead
+					String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
+							"WHERE pizza_ordertable_OrderID = ?;";
+					os = conn.prepareStatement(Pizzaquery);
+					os.setString(1, newState);
+					os.setInt(2, OrderID);
+					rset.executeQuery();
+				}
+				// PICKUP and DELIVERD(can just be updated with corresponding state)
+				else {
+					String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
+							"WHERE pizza_ordertable_OrderID = ?;";
+					os = conn.prepareStatement(Pizzaquery);
+					os.setString(1, newState);
+					os.setInt(2, OrderID);
+					rset.executeQuery();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+				// process the error or re-raise the exception to a higher level
+			}
+
+		conn.close();
 	}
 
 	//COMPLETE - ELLE
@@ -697,7 +736,7 @@ public final class DBNinja {
 			os = conn.prepareStatement(query);
 			os.setDouble(1, quantity);
 			os.setInt(2, toppingID);
-			rset = os.executeQuery()
+			rset = os.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
