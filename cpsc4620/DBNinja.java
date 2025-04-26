@@ -155,8 +155,9 @@ public final class DBNinja {
 
 	}
 
+	//COMPLETE - ELLE
+	public static ArrayList<order_table> getOrders(int status) throws SQLException, IOException
 
-	public static ArrayList<Order> getOrders(int status) throws SQLException, IOException
 	 {
 	/*
 	 * Return an ArrayList of orders.
@@ -173,8 +174,62 @@ public final class DBNinja {
 	 * Don't forget to order the data coming from the database appropriately.
 	 *
 	 */
+		 connect_to_db();
+		 ArrayList<order_table> orders = new ArrayList<>();
 
-		return null;
+		 try {
+			 PreparedStatement os;
+			 ResultSet rset;
+			 String query;
+			 query = "Select * From order_table ";
+			 if (status == 1) {
+				 query += "WHERE isComplete = 0 ";
+			 } else if (status == 2) {
+				 query += "WHERE isComplete = 1 ";
+			 }
+			 query += "ORDER BY OrderID ASC;";
+			 os = conn.prepareStatement(query);
+			 rset = os.executeQuery();
+			 while(rset.next())
+			 {
+				 int orderID = rset.getInt("OrderID");
+				 int custID = rset.getInt("CustID");
+				 String orderType = rset.getString("OrderType");
+				 String date = rset.getString("Date");
+				 double custPrice = rset.getDouble("CustPrice");
+				 double busPrice = rset.getDouble("BusPrice");
+				 boolean complete = rset.getBoolean("isComplete");
+
+				 Order order = null;
+
+				 if (orderType.equalsIgnoreCase("dine_in")) {
+					 int tableNum = rset.getInt("TableNum");
+					 order = new DineinOrder(orderID, custID, date, custPrice, busPrice, complete, tableNum);
+				 } else if (orderType.equalsIgnoreCase("pickup")) {
+					 boolean pickUp = rset.getBoolean("IsPickedUp");
+					 order = new PickupOrder(orderID, custID, date, custPrice, busPrice, pickUp, complete);
+				 } else if (orderType.equalsIgnoreCase("delivery")) {
+					 String addy = rset.getString("Address");
+					 boolean delivered = rset.getBoolean("IsDelivered");
+					 order = new DeliveryOrder(orderID, custID, date, custPrice, busPrice, complete, delivered, addy);
+				 }
+
+				 if (order != null) {
+					 order.setPizzaList(getPizzas(order));
+					 order.setDiscountList(getDiscounts(order));
+
+					 orders.add(order);
+				 }
+			 }
+		 } catch (SQLException e) {
+			 e.printStackTrace();
+			 // process the error or re-raise the exception to a higher level
+		 }
+
+		 conn.close();
+
+		 return orders;
+
 	}
 	
 	// COMPLETE- JENNA
@@ -755,7 +810,7 @@ public final class DBNinja {
 					"JOIN pizza_discount ON discount.discount_DiscountID = pizza_discount.pizza_OrderID" +
 					"WHERE pizza_discount.pizza_OrderID = ?;";
 			os.conn.prepareStatement(query);
-			os.setInt(1, o.getPizzaID());
+			os.setInt(1, p.getPizzaID());
 			rset = os.executeQuery();
 			while(rset.next())
 			{
