@@ -97,16 +97,16 @@ public final class DBNinja {
 
 			os.setString(1, o.getOrderType());
 			os.setTimestamp(2, Timestamp.valueOf(o.getDate()));
-			os.setBigDecimal(3, BigDecimal.valueOf(o.getCustPrice()));
-			os.setBigDecimal(4,BigDecimal.valueOf(o.getBusPrice()));
+			os.setDouble(3, o.getCustPrice());
+			os.setDouble(4, o.getBusPrice());
 			os.setBoolean(5, o.getIsComplete());
-			if(o.getCustID != -1) {  //check if the order is dine in
+			if(o.getCustID() != -1) {  //check if the order is dine in
 				os.setInt(6, o.getCustID());
 			}
 			os.executeUpdate();
 
 			// get the new orderID
-			int orderID;
+			int orderID = -1;
 			ResultSet keys = os.getGeneratedKeys();
 			if(keys.next()) {
 				orderID = keys.getInt(1);
@@ -116,18 +116,18 @@ public final class DBNinja {
 
 			PreparedStatement ot;
 			// specific order type tables
-			switch(o.getOrderType()) {
-				case order_state.PICKEDUP:
+			switch (o.getOrderType()) {
+				case "pickup":
 					String pickupQuery = "INSERT INTO pickup (ordertable_OrderID, pickup_IsPickedUp)" +
 							"VALUES (?,?);";
 					ot = conn.prepareStatement(pickupQuery);
-
 					ot.setInt(1, orderID);
-					ot.setBoolean(2, 0);
+					ot.setBoolean(2, false);
 					ot.executeUpdate();
 					ot.close();
 					break;
-				case order_state.DELIVERED:
+
+				case "delivery":
 					DeliveryOrder delivery = (DeliveryOrder) o;
 					String deliveryQuery = "INSERT INTO delivery(ordertable_OrderID, delivery_HouseNum, " +
 							"delivery_Street, delivery_City, delivery_State, delivery_Zip, delivery_IsDelivered)" +
@@ -135,70 +135,82 @@ public final class DBNinja {
 					ot = conn.prepareStatement(deliveryQuery);
 
 					ot.setInt(1, orderID);
-					ot.setInt(2, delivery.getHouseNum(delivery.getAddress()));
-					ot.setString(3, delivery.getStreet(delivery.getAddress()));
-					ot.setString(4, delivery.getCity(delivery.getAddress()));
-					ot.setString(5, delivery.getState(delivery.getAddress()));
-					ot.setInt(6, delivery.getZip(delivery.getAddress()));
-					ot.setBoolean(7, 0);
+					ot.setString(2, delivery.getAddress());
+					ot.setBoolean(3, false);
+
 					ot.executeUpdate();
 					ot.close();
 					break;
-				case order_state.
+
+				case "dine_in":
+					DineinOrder dinein = (DineinOrder) o;
+					String dineInQuery = "INSERT INTO dinein (ordertable_OrderID, dinein_TableNum) " +
+							"VALUES (?, ?);";
+					ot = conn.prepareStatement(dineInQuery);
+					ot.setInt(1, orderID);
+					ot.setInt(2, dinein.getTableNum());
+					ot.executeUpdate();
+					ot.close();
+					break;
 			}
+
 			// insert pizzas
 			for(Pizza pizza : o.getPizzaList()) {
-				String pizzaQuery = "INSERT INTO pizza(baseprice_Size, baseprice_CrustType,pizza_PizzaState," +
+				String pizzaQuery = "INSERT INTO pizza(baseprice_Size, baseprice_CrustType, pizza_PizzaState," +
 						"pizza_pizzaDate, pizza_CustPrice, pizza_BusPrice, ordertable_OrderID)" +
-						"VALUES (?,?, ?, ?, ?, ?, ?);";
+						"VALUES (?, ?, ?, ?, ?, ?, ?);";
 				PreparedStatement pzs = conn.prepareStatement(pizzaQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
 				pzs.setString(1, pizza.getSize());
 				pzs.setString(2, pizza.getCrustType());
 				pzs.setString(3, pizza.getPizzaState());
 				pzs.setTimestamp(4, Timestamp.valueOf(o.getDate())); // assuming date comes from order
-				pzs.setBigDecimal(5, BigDecimal.valueOf(pizza.getCustPrice()));
-				pzs.setBigDecimal(6, BigDecimal.valueOf(pizza.getBusPrice()));
+				pzs.setDouble(5, pizza.getCustPrice());
+				pzs.setDouble(6, pizza.getBusPrice());
 				pzs.setInt(7, orderID);
 
 				pzs.executeUpdate();
 
-				int pizzaID;
-				ResultSet keys = pzs.getGeneratedKeys();
+				int pizzaID = -1;
+				ResultSet pizzaKeys = pzs.getGeneratedKeys();
 
-				if (keys.next()) {
-					pizzaID = keys.getInt(1);
+				if (pizzaKeys.next()) {
+					pizzaID = pizzaKeys.getInt(1);
+					pizza.setPizzaID(pizzaID);
 				}
 				pzs.close();
-			}
-			//insert toppings
-			for (Topping t : pizza.getToppings()) {
-				PreparedStatement topOS;
-				String topQuery;
 
-				topQuery = "INSERT INTO pizza_topping(PizzaID, TopID, IsDouble) " +
-						"VALUES (?, ?, ?);";
-				topOS = conn.prepareStatement(topQuery);
-				topOS.setInt(1, pizzaID);
-				topOS.setInt(2, t.getTopID());
-				topOS.setBoolean(3, t.getDoubled());
-				topOS.executeUpdate();
-				topOS.close();
-			}
-			//insert pizza discounts
-			for (Discount dis : pizza.getDiscounts()) {
-				PreparedStatement disOS;
-				String disQuery;
+				//insert toppings
+				for (Topping t : pizza.getToppings()) {
+					PreparedStatement topOS;
+					String topQuery;
 
-				disQuery = "INSERT INTO pizza_discount (PizzaID, DiscountID) " +
-						"VALUES (?, ?);";
-				disOS = conn.prepareStatement(disQuery);
+					topQuery = "INSERT INTO pizza_topping(PizzaID, TopID, IsDouble) " +
+							"VALUES (?, ?, ?);";
+					topOS = conn.prepareStatement(topQuery);
+					topOS.setInt(1, pizzaID);
+					topOS.setInt(2, t.getTopID());
+					topOS.setBoolean(3, t.getDoubled());
+					topOS.executeUpdate();
+					topOS.close();
+				}
 
-				disOS.setInt(1, pizzaID);
-				disOS.setInt(2, dis.getDiscountID());
-				disOS.executeUpdate();
-				disOS.close();
+				//insert pizza discounts
+				for (Discount dis : pizza.getDiscounts()) {
+					PreparedStatement disOS;
+					String disQuery;
+
+					disQuery = "INSERT INTO pizza_discount (PizzaID, DiscountID) " +
+							"VALUES (?, ?);";
+					disOS = conn.prepareStatement(disQuery);
+
+					disOS.setInt(1, pizzaID);
+					disOS.setInt(2, dis.getDiscountID());
+					disOS.executeUpdate();
+					disOS.close();
+				}
 			}
+
 
 		} catch (SQLException e) {
 			e.printStackTrace();
