@@ -31,6 +31,62 @@ public class DeliveryOrder extends Order
 	public String toString() {
 		return super.toString() + " | Delivered to: " + Address + " | Order Delivered: " + ((isDelivered)?"Yes":"No");
 	}
-	
-	
-}
+
+	// HELPER METHODS TO GET ADDRESS COMPONENTS
+	public int getHouseNum(String address) {
+		if (address == null || address.isEmpty()) return 0;
+		try {
+			String[] parts = address.split("\t");
+			return Integer.parseInt(parts[0].trim());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+
+		}
+	}
+	public String getStreet(String address) {
+			if (address == null || address.isEmpty()) return "";
+			try {
+				String[] parts = address.split("\t");
+				return parts[1].trim();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+	}
+
+	public String getCity(String address) {
+			if (address == null || address.isEmpty()) return "";
+			try {
+				String[] parts = address.split("\t");
+				return parts[2].trim();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+	}
+
+	public String getState(String address) {
+			if (address == null || address.isEmpty()) return "";
+			try {
+				String[] parts = address.split("\t");
+				return parts[3].trim();
+			} catch (Exception e) {
+				e.printStackTrace();
+				return "";
+			}
+	}
+
+	public int getZip(String address) {
+			if (address == null || address.isEmpty()) return 0;
+			try {
+				String[] parts = address.split("\t");
+				return Integer.parseInt(parts[4].trim());
+			} catch (Exception e) {
+				e.printStackTrace();
+				return 0;
+			}
+	}
+
+
+	}
