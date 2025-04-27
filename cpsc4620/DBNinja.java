@@ -55,8 +55,7 @@ public final class DBNinja {
 	}
 
 
-	private static boolean connect_to_db() throws SQLException, IOException 
-	{
+	private static boolean connect_to_db() throws SQLException, IOException {
 
 		try {
 			conn = DBConnector.make_connection();
@@ -69,81 +68,77 @@ public final class DBNinja {
 
 	}
 
-	public static void addOrder(Order o) throws SQLException, IOException 
-	{
+	public static void addOrder(Order o) throws SQLException, IOException {
 		/*
 		 * add code to add the order to the DB. Remember that we're not just
 		 * adding the order to the order DB table, but we're also recording
 		 * the necessary data for the delivery, dinein, pickup, pizzas, toppings
 		 * on pizzas, order discounts and pizza discounts.
-		 * 
+		 *
 		 * This is a KEY method as it must store all the data in the Order object
 		 * in the database and make sure all the tables are correctly linked.
-		 * 
+		 *
 		 * Remember, if the order is for Dine In, there is no customer...
 		 * so the cusomter id coming from the Order object will be -1.
-		 * 
+		 *
 		 */
 	}
-	
-	public static int addPizza(java.util.Date d, int orderID, Pizza p) throws SQLException, IOException
-	{
+
+	public static int addPizza(java.util.Date d, int orderID, Pizza p) throws SQLException, IOException {
 		/*
 		 * Add the code needed to insert the pizza into into the database.
-		 * Keep in mind you must also add the pizza discounts and toppings 
+		 * Keep in mind you must also add the pizza discounts and toppings
 		 * associated with the pizza.
-		 * 
+		 *
 		 * NOTE: there is a Date object passed into this method so that the Order
 		 * and ALL its Pizzas can be assigned the same DTS.
-		 * 
+		 *
 		 * This method returns the id of the pizza just added.
-		 * 
+		 *
 		 */
 
 		return -1;
 	}
 
 	// COMPLETE -Jenna
-	public static int addCustomer(Customer c) throws SQLException, IOException
-	 {
+	public static int addCustomer(Customer c) throws SQLException, IOException {
 		/*
 		 * This method adds a new customer to the database.
-		 * 
+		 *
 		 */
-		
-		 connect_to_db();
-		 int newCustID;
 
-		 try {
-			 PreparedStatement os;
-			 String query = "INSERT INTO customer (customer_Fname, customer_Lname, customer_PhoneNum)" +
-					 "VALUES (?, ?, ?)";
-			 os = conn.prepareStatement(query);
+		connect_to_db();
+		int newCustID = 0;
 
-			 os.setString(1, c.getFName());
-			 os.setString(2, c.getLName());
-			 os.setString(3, c.getPhoneNum());
-			 os.executeUpdate();
+		try {
+			PreparedStatement os;
+			String query = "INSERT INTO customer (customer_Fname, customer_Lname, customer_PhoneNum)" +
+					"VALUES (?, ?, ?)";
+			os = conn.prepareStatement(query);
 
-			 try(ResultSet generatedKey = os.getGeneratedKeys()) {
-					 if(generatedKey.next()) {
-						 int newCustID = generatedKey.getInt(1);
-					 }
-			 }
-		 } catch (SQLException e) {
-			 e.printStackTrace();
-			 // process the error or re-raise the exception to a higher level
-		 }
+			os.setString(1, c.getFName());
+			os.setString(2, c.getLName());
+			os.setString(3, c.getPhone());
+			os.executeUpdate();
 
-		 conn.close();
+			try (ResultSet generatedKey = os.getGeneratedKeys()) {
+				if (generatedKey.next()) {
+					newCustID = generatedKey.getInt(1);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
 
-		 //return new customer's ID
-		 return newCustID;
+		conn.close();
+
+		//return new customer's ID
+		return newCustID;
 	}
 
 	//COMPLETE- JENNA
-	public static void completeOrder(int OrderID, order_state newState ) throws SQLException, IOException
-	{
+	public static void completeOrder(int OrderID, order_state newState) throws SQLException, IOException {
 		/*
 		 * Mark that order as complete in the database.
 		 * Note: if an order is complete, this means all the pizzas are complete as well.
@@ -154,126 +149,123 @@ public final class DBNinja {
 		 * FOR newState = PICKEDUP: mark the pickup status
 		 *
 		 */
-			connect_to_db();
+		connect_to_db();
 
-			try {
-				PreparedStatement os;
+		try {
+			PreparedStatement os;
+			ResultSet rset;
 
-				// change pizza statuses
-				if(newState == order_state.PREPARED) {
+			// change pizza statuses
+			if (newState == order_state.PREPARED) {
 
-					// mark order as complete
-					String Orderquery = "UPDATE ordertable SET ordertable_isComplete = 1 " +
-							"WHERE ordertable_OrderID = ?;";
-					os = conn.prepareStatement(Orderquery);
-					os.setInt(1, OrderID);
-					os.executeUpdate();
+				// mark order as complete
+				String Orderquery = "UPDATE ordertable SET ordertable_isComplete = 1 " +
+						"WHERE ordertable_OrderID = ?;";
+				os = conn.prepareStatement(Orderquery);
+				os.setInt(1, OrderID);
+				os.executeUpdate();
 
-					// mark pizzas as complete- keeping as separate in case it should be marked as "complete" instead
-					String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
-							"WHERE pizza_ordertable_OrderID = ?;";
-					os = conn.prepareStatement(Pizzaquery);
-					os.setString(1, newState);
-					os.setInt(2, OrderID);
-					rset.executeQuery();
-				}
-				// PICKUP and DELIVERD(can just be updated with corresponding state)
-				else {
-					String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
-							"WHERE pizza_ordertable_OrderID = ?;";
-					os = conn.prepareStatement(Pizzaquery);
-					os.setString(1, newState);
-					os.setInt(2, OrderID);
-					rset.executeQuery();
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
-				// process the error or re-raise the exception to a higher level
+				// mark pizzas as complete- keeping as separate in case it should be marked as "complete" instead
+				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
+						"WHERE pizza_ordertable_OrderID = ?;";
+				os = conn.prepareStatement(Pizzaquery);
+				os.setString(1, newState);
+				os.setInt(2, OrderID);
+				rset = os.executeQuery();
 			}
+			// PICKUP and DELIVERD(can just be updated with corresponding state)
+			else {
+				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
+						"WHERE pizza_ordertable_OrderID = ?;";
+				os = conn.prepareStatement(Pizzaquery);
+				os.setString(1, newState);
+				os.setInt(2, OrderID);
+				rset = os.executeQuery();
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
 
 		conn.close();
 	}
 
 	//COMPLETE - ELLE
-	public static ArrayList<order_table> getOrders(int status) throws SQLException, IOException
+	public static ArrayList<Order> getOrders(int status) throws SQLException, IOException {
+		/*
+		 * Return an ArrayList of orders.
+		 * 	status   == 1 => return a list of open (ie oder is not completed)
+		 *           == 2 => return a list of completed orders (ie order is complete)
+		 *           == 3 => return a list of all the orders
+		 * Remember that in Java, we account for supertypes and subtypes
+		 * which means that when we create an arrayList of orders, that really
+		 * means we have an arrayList of dineinOrders, deliveryOrders, and pickupOrders.
+		 *
+		 * You must fully populate the Order object, this includes order discounts,
+		 * and pizzas along with the toppings and discounts associated with them.
+		 *
+		 * Don't forget to order the data coming from the database appropriately.
+		 *
+		 */
+		connect_to_db();
+		ArrayList<Order> orders = new ArrayList<>();
 
-	 {
-	/*
-	 * Return an ArrayList of orders.
-	 * 	status   == 1 => return a list of open (ie oder is not completed)
-	 *           == 2 => return a list of completed orders (ie order is complete)
-	 *           == 3 => return a list of all the orders
-	 * Remember that in Java, we account for supertypes and subtypes
-	 * which means that when we create an arrayList of orders, that really
-	 * means we have an arrayList of dineinOrders, deliveryOrders, and pickupOrders.
-	 *
-	 * You must fully populate the Order object, this includes order discounts,
-	 * and pizzas along with the toppings and discounts associated with them.
-	 * 
-	 * Don't forget to order the data coming from the database appropriately.
-	 *
-	 */
-		 connect_to_db();
-		 ArrayList<order_table> orders = new ArrayList<>();
+		try {
+			PreparedStatement os;
+			ResultSet rset;
+			String query;
+			query = "Select * From order_table ";
+			if (status == 1) {
+				query += "WHERE isComplete = 0 ";
+			} else if (status == 2) {
+				query += "WHERE isComplete = 1 ";
+			}
+			query += "ORDER BY OrderID ASC;";
+			os = conn.prepareStatement(query);
+			rset = os.executeQuery();
+			while (rset.next()) {
+				int orderID = rset.getInt("OrderID");
+				int custID = rset.getInt("CustID");
+				String orderType = rset.getString("OrderType");
+				String date = rset.getString("Date");
+				double custPrice = rset.getDouble("CustPrice");
+				double busPrice = rset.getDouble("BusPrice");
+				boolean complete = rset.getBoolean("isComplete");
 
-		 try {
-			 PreparedStatement os;
-			 ResultSet rset;
-			 String query;
-			 query = "Select * From order_table ";
-			 if (status == 1) {
-				 query += "WHERE isComplete = 0 ";
-			 } else if (status == 2) {
-				 query += "WHERE isComplete = 1 ";
-			 }
-			 query += "ORDER BY OrderID ASC;";
-			 os = conn.prepareStatement(query);
-			 rset = os.executeQuery();
-			 while(rset.next())
-			 {
-				 int orderID = rset.getInt("OrderID");
-				 int custID = rset.getInt("CustID");
-				 String orderType = rset.getString("OrderType");
-				 String date = rset.getString("Date");
-				 double custPrice = rset.getDouble("CustPrice");
-				 double busPrice = rset.getDouble("BusPrice");
-				 boolean complete = rset.getBoolean("isComplete");
+				Order order = null;
 
-				 Order order = null;
+				if (orderType.equalsIgnoreCase("dine_in")) {
+					int tableNum = rset.getInt("TableNum");
+					order = new DineinOrder(orderID, custID, date, custPrice, busPrice, complete, tableNum);
+				} else if (orderType.equalsIgnoreCase("pickup")) {
+					boolean pickUp = rset.getBoolean("IsPickedUp");
+					order = new PickupOrder(orderID, custID, date, custPrice, busPrice, pickUp, complete);
+				} else if (orderType.equalsIgnoreCase("delivery")) {
+					String addy = rset.getString("Address");
+					boolean delivered = rset.getBoolean("IsDelivered");
+					order = new DeliveryOrder(orderID, custID, date, custPrice, busPrice, complete, delivered, addy);
+				}
 
-				 if (orderType.equalsIgnoreCase("dine_in")) {
-					 int tableNum = rset.getInt("TableNum");
-					 order = new DineinOrder(orderID, custID, date, custPrice, busPrice, complete, tableNum);
-				 } else if (orderType.equalsIgnoreCase("pickup")) {
-					 boolean pickUp = rset.getBoolean("IsPickedUp");
-					 order = new PickupOrder(orderID, custID, date, custPrice, busPrice, pickUp, complete);
-				 } else if (orderType.equalsIgnoreCase("delivery")) {
-					 String addy = rset.getString("Address");
-					 boolean delivered = rset.getBoolean("IsDelivered");
-					 order = new DeliveryOrder(orderID, custID, date, custPrice, busPrice, complete, delivered, addy);
-				 }
+				if (order != null) {
+					order.setPizzaList(getPizzas(order));
+					order.setDiscountList(getDiscounts(order));
 
-				 if (order != null) {
-					 order.setPizzaList(getPizzas(order));
-					 order.setDiscountList(getDiscounts(order));
+					orders.add(order);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
 
-					 orders.add(order);
-				 }
-			 }
-		 } catch (SQLException e) {
-			 e.printStackTrace();
-			 // process the error or re-raise the exception to a higher level
-		 }
+		conn.close();
 
-		 conn.close();
-
-		 return orders;
+		return orders;
 
 	}
-	
+
 	// COMPLETE- JENNA
-	public static Order getLastOrder() throws SQLException, IOException
-	{
+	public static Order getLastOrder() throws SQLException, IOException {
 		/*
 		 * Query the database for the LAST order added
 		 * then return an Order object for that order.
@@ -289,81 +281,78 @@ public final class DBNinja {
 			query = "SELECT * From ordertable ORDER BY OrderDateTime DESC LIMIT 1;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
-			while (rset.next())
-			{
+			while (rset.next()) {
 				int orderid = rset.getInt("orderTable_OrderID");
-				string type = rset.getString("ordertable_OrderType");
-				DATETIME datetime = rset.getDatetime("ordertable_OrderDateTime");
-				decimal custprice = rset.getDecimal("ordertable_CustPrice");
-				decimal busprice = rset.getDecimal("ordertable_BusPrice");
-				boolean complete = rset.getBoolean("ordertable_isComplete");
 				int custid = rset.getInt("customer_CustID");
-				order = new Order(orderid, type, datetime, custprice, busprice, complete, custid);
+				String type = rset.getString("ordertable_OrderType");
+				String datetime = rset.getString("ordertable_OrderDateTime");
+				Double custprice = rset.getDouble("ordertable_CustPrice");
+				Double busprice = rset.getDouble("ordertable_BusPrice");
+				boolean complete = rset.getBoolean("ordertable_isComplete");
+
+				order = new Order(orderid, custid, type, datetime, custprice, busprice, complete);
 
 			}
-		} catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
 
 		conn.close();
 
-		 return order;
+		return order;
 	}
 
 	// COMPLETE - Jenna
-	public static ArrayList<Order> getOrdersByDate(String date) throws SQLException, IOException
-	 {
+	public static ArrayList<Order> getOrdersByDate(String date) throws SQLException, IOException {
 		/*
 		 * Query the database for ALL the orders placed on a specific date
 		 * and return a list of those orders.
-		 *  
+		 *
 		 */
-		 return null;
 
-		 connect_to_db();
+		connect_to_db();
 
-		 ArrayList<ordertable> orderList = new ArrayList<>();
+		ArrayList<Order> orderList = new ArrayList<>();
 
-		 try{
-			 PreparedStatement ps;
-			 ResultSet rset;
-			 String query;
-			 query = "Select ordertable_OrderID, ordertable_OrderType,"
-					 + "ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID" +
-					 "From ordertable Where ordertable_OrderDateTime = ?;";
-			 ps.conn.prepareStatement(query);
-			 ps.setString(1, date);
-			 rset = ps.executeQuery();
-			 while(rset.next())
-			 {
-				 int id = rset.getInt("ordertable_OrderID");
-				 String ordertype = rset.getString("ordertable_OrderType");
-				 decimal custprice = rset.getdecimal("ordertable_CustPrice");
-				 decimal busprice = rset.getdecimal("ordertable_BusPrice");
-				 boolean complete = rset.getBoolean("ordertable_isComplete");
-				 int cusid = rset.getInt("customer_CustID");
-				 ordertable order = new ordertable(id, ordertype, date, cusprice, busprice, complete, cusid);
-				 orderList.add(order);
-			 }
-		 } catch (SQLException e) {
-			 e.printStackTrace();
-			 // process the error or re-raise the exception to a higher level
-		 }
+		try {
+			PreparedStatement ps;
+			ResultSet rset;
+			String query;
+			query = "Select ordertable_OrderID, ordertable_OrderType,"
+					+ "ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID" +
+					"From ordertable Where ordertable_OrderDateTime = ?;";
+			ps = conn.prepareStatement(query);
+			ps.setString(1, date);
+			rset = ps.executeQuery();
+			while (rset.next()) {
+				int Orderid = rset.getInt("ordertable_OrderID");
+				int cusid = rset.getInt("customer_CustID");
+				String ordertype = rset.getString("ordertable_OrderType");
+				double custprice = rset.getDouble("ordertable_CustPrice");
+				double busprice = rset.getDouble("ordertable_BusPrice");
+				boolean complete = rset.getBoolean("ordertable_isComplete");
+				Order order = new Order(Orderid, cusid, ordertype, date, custprice, busprice, complete);
 
-		 conn.close();
+				orderList.add(order);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
 
-		 return orderList;
+		conn.close();
+
+		return orderList;
 	}
 
 	//COMPLETE -Jenna
-	public static ArrayList<Discount> getDiscountList() throws SQLException, IOException 
-	{
-		/* 
-		 * Query the database for all the available discounts and 
+	public static ArrayList<Discount> getDiscountList() throws SQLException, IOException {
+		/*
+		 * Query the database for all the available discounts and
 		 * return them in an arrayList of discounts ordered by discount name.
-		 * 
-		*/
+		 *
+		 */
 		connect_to_db();
 		ArrayList<Discount> discountList = new ArrayList<>();
 
@@ -374,12 +363,11 @@ public final class DBNinja {
 			query = "Select discount_DiscountID, discount_DiscountName, discount_Amount, discount_IsPercent From discount" +
 					"ORDER BY discount_DiscountName;";
 			ps = conn.prepareStatement(query);
-			rset = os.executeQuery();
-			while(rset.next())
-			{
+			rset = ps.executeQuery();
+			while (rset.next()) {
 				int id = rset.getInt("dicount_DiscountID");
 				String name = rset.getString("discount_DiscountName");
-				Decimal amount = rset.getDecimal("discount_Amount");
+				Double amount = rset.getDouble("discount_Amount");
 				Boolean ispercent = rset.getBoolean("discount_IsPercent");
 				Discount discount = new Discount(id, name, amount, ispercent);
 
@@ -396,13 +384,12 @@ public final class DBNinja {
 	}
 
 	//COMPLETE - Jenna
-	public static Discount findDiscountByName(String name) throws SQLException, IOException 
-	{
+	public static Discount findDiscountByName(String name) throws SQLException, IOException {
 		/*
 		 * Query the database for a discount using it's name.
 		 * If found, then return an OrderDiscount object for the discount.
 		 * If it's not found....then return null
-		 *  
+		 *
 		 */
 		connect_to_db();
 		Discount discount = null;
@@ -414,15 +401,14 @@ public final class DBNinja {
 			query = "Select discount_DiscountID, discount_DiscountName, discount_Amount, discount_IsPercent" +
 					"from Discount Where discount_DiscountName=?;";
 			ps = conn.prepareStatement(query);
-			ps.setString(1, discountname);
-			rset = os.executeQuery();
-			while(rset.next())
-			{
+			ps.setString(1, name);
+			rset = ps.executeQuery();
+			while (rset.next()) {
 				int id = rset.getInt("discount_DiscountID");
-				String name = rset.getString("discount_DiscountName");
-				Decimal amount = rset.getDecimal("discount_Amount");
+				String Dname = rset.getString("discount_DiscountName");
+				Double amount = rset.getDouble("discount_Amount");
 				Boolean ispercent = rset.getBoolean("discount_IsPercent");
-				discount = new Discount(id, name, amount, ispercent);
+				discount = new Discount(id, Dname, amount, ispercent);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -436,13 +422,12 @@ public final class DBNinja {
 
 
 	// COMPLETE - ELLE
-	public static ArrayList<Customer> getCustomerList() throws SQLException, IOException 
-	{
+	public static ArrayList<Customer> getCustomerList() throws SQLException, IOException {
 		/*
-		 * Query the data for all the customers and return an arrayList of all the customers. 
+		 * Query the data for all the customers and return an arrayList of all the customers.
 		 * Don't forget to order the data coming from the database appropriately.
-		 * 
-		*/
+		 *
+		 */
 		connect_to_db();
 		ArrayList<Customer> customerList = new ArrayList<>();
 
@@ -453,8 +438,7 @@ public final class DBNinja {
 			query = "Select customer_CustID, customer_FName, customer_LName, customer_Phone From customer ORDER BY customer_LName, customer_FName;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
-			while(rset.next())
-			{
+			while (rset.next()) {
 				int id = rset.getInt("customer_CustID");
 				String fname = rset.getString("customer_FName");
 				String lname = rset.getString("customer_LName");
@@ -475,13 +459,12 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - ELLE
-	public static Customer findCustomerByPhone(String phoneNumber)  throws SQLException, IOException 
-	{
+	public static Customer findCustomerByPhone(String phoneNumber) throws SQLException, IOException {
 		/*
 		 * Query the database for a customer using a phone number.
 		 * If found, then return a Customer object for the customer.
 		 * If it's not found....then return null
-		 *  
+		 *
 		 */
 		connect_to_db();
 		Customer customer = null;
@@ -494,8 +477,7 @@ public final class DBNinja {
 			os = conn.prepareStatement(query);
 			os.setString(1, phoneNumber);
 			rset = os.executeQuery();
-			while(rset.next())
-			{
+			while (rset.next()) {
 				int id = rset.getInt("customer_CustID");
 				String fname = rset.getString("customer_FName");
 				String lname = rset.getString("customer_LName"); // note the use of field names in the getSting methods
@@ -513,42 +495,40 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - GIVEN EXAMPLE
-	public static String getCustomerName(int CustID) throws SQLException, IOException 
-	{
+	public static String getCustomerName(int CustID) throws SQLException, IOException {
 		/*
 		 * COMPLETED...WORKING Example!
-		 * 
+		 *
 		 * This is a helper method to fetch and format the name of a customer
 		 * based on a customer ID. This is an example of how to interact with
-		 * your database from Java.  
-		 * 
-		 * Notice how the connection to the DB made at the start of the 
+		 * your database from Java.
+		 *
+		 * Notice how the connection to the DB made at the start of the
 		 *
 		 */
 
-		 connect_to_db();
+		connect_to_db();
 
-		/* 
+		/*
 		 * an example query using a constructed string...
 		 * remember, this style of query construction could be subject to sql injection attacks!
-		 * 
+		 *
 		 */
 		String cname1 = "";
 		String cname2 = "";
 		String query = "Select customer_FName, customer_LName From customer WHERE customer_CustID=" + CustID + ";";
 		Statement stmt = conn.createStatement();
 		ResultSet rset = stmt.executeQuery(query);
-		
-		while(rset.next())
-		{
-			cname1 = rset.getString(1) + " " + rset.getString(2); 
+
+		while (rset.next()) {
+			cname1 = rset.getString(1) + " " + rset.getString(2);
 		}
 
-		/* 
-		* an BETTER example of the same query using a prepared statement...
-		* with exception handling
-		* 
-		*/
+		/*
+		 * an BETTER example of the same query using a prepared statement...
+		 * with exception handling
+		 *
+		 */
 		try {
 			PreparedStatement os;
 			ResultSet rset2;
@@ -557,8 +537,7 @@ public final class DBNinja {
 			os = conn.prepareStatement(query2);
 			os.setInt(1, CustID);
 			rset2 = os.executeQuery();
-			while(rset2.next())
-			{
+			while (rset2.next()) {
 				cname2 = rset2.getString("customer_FName") + " " + rset2.getString("customer_LName"); // note the use of field names in the getSting methods
 			}
 		} catch (SQLException e) {
@@ -570,19 +549,18 @@ public final class DBNinja {
 
 		//return cname1;
 		// OR
-		 return cname2;
+		return cname2;
 
 	}
 
 
 	// COMPLETE - ELLE
-	public static ArrayList<Topping> getToppingList() throws SQLException, IOException 
-	{
+	public static ArrayList<Topping> getToppingList() throws SQLException, IOException {
 		/*
-		 * Query the database for the aviable toppings and 
-		 * return an arrayList of all the available toppings. 
+		 * Query the database for the aviable toppings and
+		 * return an arrayList of all the available toppings.
 		 * Don't forget to order the data coming from the database appropriately.
-		 * 
+		 *
 		 */
 
 		connect_to_db();
@@ -595,8 +573,7 @@ public final class DBNinja {
 			query = "Select * From Topping WHERE topping_CurINVT > 0 ORDER BY topping_TopName;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
-			while(rset.next())
-			{
+			while (rset.next()) {
 				int id = rset.getInt("topping_TopID");
 				String name = rset.getString("topping_TopName");
 				double small = rset.getDouble("topping_SmallAMT");
@@ -622,13 +599,12 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - ELLE
-	public static Topping findToppingByName(String name) throws SQLException, IOException 
-	{
+	public static Topping findToppingByName(String name) throws SQLException, IOException {
 		/*
 		 * Query the database for the topping using it's name.
 		 * If found, then return a Topping object for the topping.
 		 * If it's not found....then return null
-		 *  
+		 *
 		 */
 		connect_to_db();
 		Topping topping = null;
@@ -641,8 +617,7 @@ public final class DBNinja {
 			os = conn.prepareStatement(query);
 			os.setString(1, name);
 			rset = os.executeQuery();
-			while(rset.next())
-			{
+			while (rset.next()) {
 				int id = rset.getInt("topping_TopID");
 				String toppingName = rset.getString("topping_TopName");
 				double small = rset.getDouble("topping_SmallAMT");
@@ -671,9 +646,8 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - ELLE
-	public static ArrayList<Topping> getToppingsOnPizza(Pizza p) throws SQLException, IOException 
-	{
-		/* 
+	public static ArrayList<Topping> getToppingsOnPizza(Pizza p) throws SQLException, IOException {
+		/*
 		 * This method builds an ArrayList of the toppings ON a pizza.
 		 * The list can then be added to the Pizza object elsewhere in the
 		 */
@@ -692,9 +666,8 @@ public final class DBNinja {
 			os = conn.prepareStatement(query);
 			os.setInt(1, p.getPizzaID());
 			rset = os.executeQuery();
-			while(rset.next())
-			{
-				Topping top = new Topping (
+			while (rset.next()) {
+				Topping top = new Topping(
 						rset.getInt("TopID"),
 						rset.getString("TopName"),
 						rset.getDouble("SmallAMT"),
@@ -720,11 +693,10 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - Jenna
-	public static void addToInventory(int toppingID, double quantity) throws SQLException, IOException 
-	{
+	public static void addToInventory(int toppingID, double quantity) throws SQLException, IOException {
 		/*
 		 * Updates the quantity of the topping in the database by the amount specified.
-		 * 
+		 *
 		 * */
 		connect_to_db();
 
@@ -743,13 +715,12 @@ public final class DBNinja {
 		}
 		conn.close();
 	}
-	
+
 	// COMPLETE -Jenna
-	public static ArrayList<Pizza> getPizzas(Order o) throws SQLException, IOException 
-	{
+	public static ArrayList<Pizza> getPizzas(Order o) throws SQLException, IOException {
 		/*
 		 * Build an ArrayList of all the Pizzas associated with the Order.
-		 * 
+		 *
 		 */
 		connect_to_db();
 		ArrayList<Pizza> pizzas = new ArrayList<>();
@@ -763,20 +734,19 @@ public final class DBNinja {
 					"ordertable_OrderID from pizza" +
 					"JOIN ordertable ON pizza.ordertable_OrderID = ordertable.ordertable_OrderID" +
 					"WHERE pizza.ordertable_OrderID = ?;";
-			os.conn.prepareStatement(query);
+			os = conn.prepareStatement(query);
 			os.setInt(1, o.getOrderID());
 			rset = os.executeQuery();
-			while(rset.next())
-			{
-				pizza pizza = new pizza (
-						rset.getInt("pizza_PizzaID");
-						rset.getString("pizza_baseprice_Size");
-						rset.getString("pizza_baseprice_CrustType");
-						rset.getString("pizza_PizzaState");
-						rset.getTimestamp("pizza_PizzaDate");
-						rset.getBigDecimal("pizza_CustPrice");
-						rset.getBigDecimal("pizza_BusPrice");
-						rset.getInt("ordertable_OrderID");
+			while (rset.next()) {
+				Pizza pizza = new Pizza(
+						rset.getInt("pizza_PizzaID"),
+						rset.getString("pizza_Size"),
+						rset.getString("pizza_CrustType"),
+						rset.getInt("ordertable_OrderID"),
+						rset.getString("pizza_PizzaState"),
+						rset.getString("pizza_PizzaDate"),
+						rset.getDouble("pizza_CustPrice"),
+						rset.getDouble("pizza_BusPrice")
 				);
 				pizzas.add(pizza);
 			}
@@ -792,14 +762,13 @@ public final class DBNinja {
 	}
 
 	//COMPLETE -Jenna
-	public static ArrayList<Discount> getDiscounts(Order o) throws SQLException, IOException 
-	{
-		/* 
+	public static ArrayList<Discount> getDiscounts(Order o) throws SQLException, IOException {
+		/*
 		 * Build an array list of all the Discounts associted with the Order.
-		 * 
+		 *
 		 */
 		connect_to_db();
-		ArrayList<discount> discounts = new ArrayList<>();
+		ArrayList<Discount> discounts = new ArrayList<>();
 
 		try {
 			PreparedStatement os;
@@ -809,36 +778,36 @@ public final class DBNinja {
 					"from discount" +
 					"JOIN order_discount ON discount.discount_DiscountID = order_discount.ordertable_OrderID" +
 					"WHERE order_discount.ordertable_OrderID = ?;";
-			os.conn.prepareStatement(query);
+			os = conn.prepareStatement(query);
 			os.setInt(1, o.getOrderID());
 			rset = os.executeQuery();
-			while(rset.next())
-			{
-				discount disc = new discount (
-						rset.getInt("discount_DiscountID");
-						rset.getString("discount_DiscountName");
-						rset.getBigDecimal("discount_Amount");
-						rset.getBoolean("discount_IsPercent");
+			while (rset.next()) {
+				Discount disc = new Discount(
+						rset.getInt("discount_DiscountID"),
+						rset.getString("discount_DiscountName"),
+						rset.getDouble("discount_Amount"),
+						rset.getBoolean("discount_IsPercent")
 				);
 				discounts.add(disc);
-			} catch (SQLException e) {
-				e.printStackTrace();
-				// process the error or re-raise the exception to a higher level
 			}
-			conn.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+
+		conn.close();
 
 		return discounts;
 	}
 
 	//COMPLETE -Jenna
-	public static ArrayList<Discount> getDiscounts(Pizza p) throws SQLException, IOException 
-	{
-		/* 
+	public static ArrayList<Discount> getDiscounts(Pizza p) throws SQLException, IOException {
+		/*
 		 * Build an array list of all the Discounts associted with the Pizza.
-		 * 
+		 *
 		 */
 		connect_to_db();
-		ArrayList<discount> discounts = new ArrayList<>();
+		ArrayList<Discount> discounts = new ArrayList<>();
 
 		try {
 			PreparedStatement os;
@@ -848,28 +817,30 @@ public final class DBNinja {
 					"from discount" +
 					"JOIN pizza_discount ON discount.discount_DiscountID = pizza_discount.pizza_OrderID" +
 					"WHERE pizza_discount.pizza_OrderID = ?;";
-			os.conn.prepareStatement(query);
+			os = conn.prepareStatement(query);
 			os.setInt(1, p.getPizzaID());
 			rset = os.executeQuery();
-			while(rset.next())
-			{
-				discount disc = new discount (
-						rset.getInt("discount_DiscountID");
-				rset.getString("discount_DiscountName");
-				rset.getBigDecimal("discount_Amount");
-				rset.getBoolean("discount_IsPercent");
+			while (rset.next()) {
+				Discount disc = new Discount(
+						rset.getInt("discount_DiscountID"),
+						rset.getString("discount_DiscountName"),
+						rset.getDouble("discount_Amount"),
+						rset.getBoolean("discount_IsPercent")
 				);
 				discounts.add(disc);
-			} catch (SQLException e) {
-				e.printStackTrace();
-				// process the error or re-raise the exception to a higher level
 			}
-			conn.close();
-
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
 		}
+		conn.close();
+
+		return discounts;
+
+	}
 
 	// COMPLETE - ELLE
-	public static double getBaseCustPrice(String size, String crust) throws SQLException, IOException 
+	public static double getBaseCustPrice(String size, String crust) throws SQLException, IOException
 	{
 		/* 
 		 * Query the database fro the base customer price for that size and crust pizza.
