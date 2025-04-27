@@ -169,7 +169,7 @@ public final class DBNinja {
 				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
 						"WHERE pizza_ordertable_OrderID = ?;";
 				os = conn.prepareStatement(Pizzaquery);
-				os.setString(1, newState);
+				os.setObject(1, newState);
 				os.setInt(2, OrderID);
 				rset = os.executeQuery();
 			}
@@ -178,7 +178,7 @@ public final class DBNinja {
 				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
 						"WHERE pizza_ordertable_OrderID = ?;";
 				os = conn.prepareStatement(Pizzaquery);
-				os.setString(1, newState);
+				os.setObject(1, newState);
 				os.setInt(2, OrderID);
 				rset = os.executeQuery();
 			}
