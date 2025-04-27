@@ -106,6 +106,7 @@ public final class DBNinja {
 
 	}
 
+	// COMPLETED - ELLE
 	public static int addPizza(java.util.Date d, int orderID, Pizza p) throws SQLException, IOException {
 		/*
 		 * Add the code needed to insert the pizza into into the database.
@@ -118,8 +119,66 @@ public final class DBNinja {
 		 * This method returns the id of the pizza just added.
 		 *
 		 */
+		connect_to_db();
+		int pizzaID = -1;
 
-		return -1;
+		try {
+			PreparedStatement os;
+			String query;
+			query = "INSERT INTO Pizza (OrderID, Size, CrustType, PizzaState, PizzaDate, CustPrice, BusPrice) " +
+					"VALUES (?, ?, ?, ?, ?, ?, ?);";
+			os = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+
+			os.setInt(1, orderID);
+			os.setString(2, p.getSize());
+			os.setString(3, p.getCrustType());
+			os.setString(4, p.getPizzaState());
+			os.setTimestamp(5, new java.sql.Timestamp(d.getTime()));
+			os.setDouble(6, p.getCustPrice());
+			os.setDouble(7, p.getBusPrice());
+			os.executeUpdate();
+
+			ResultSet keys = os.getGeneratedKeys();
+
+			if (keys.next()) {
+				pizzaID = keys.getInt(1);
+				p.setPizzaID(pizzaID);
+			}
+
+			for (Topping t : p.getToppings()) {
+				PreparedStatement topOS;
+				String topQuery;
+
+				topQuery = "INSERT INTO PizzaToppings (PizzaID, TopID, IsDouble) " +
+						"VALUES (?, ?, ?);";
+				topOS = conn.prepareStatement(topQuery);
+				topOS.setInt(1, pizzaID);
+				topOS.setInt(2, t.getTopID());
+				topOS.setBoolean(3, t.getDoubled());
+				topOS.executeUpdate();
+			}
+
+			for (Discount dis : p.getDiscounts()) {
+				PreparedStatement disOS;
+				String disQuery;
+
+				disQuery = "INSERT INTO PizzaDiscounts (PizzaID, DiscountID) " +
+						"VALUES (?, ?);";
+				disOS = conn.prepareStatement(disQuery);
+
+				disOS.setInt(1, pizzaID);
+				disOS.setInt(2, dis.getDiscountID());
+
+				disOS.executeUpdate();
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			// process the error or re-raise the exception to a higher level
+		}
+		conn.close();
+		
+		return pizzaID;
 	}
 
 	// COMPLETE -Jenna
