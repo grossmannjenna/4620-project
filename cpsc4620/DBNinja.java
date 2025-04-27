@@ -68,6 +68,7 @@ public final class DBNinja {
 
 	}
 
+	// IN PROGRESS - Jenna
 	public static void addOrder(Order o) throws SQLException, IOException {
 		/*
 		 * add code to add the order to the DB. Remember that we're not just
@@ -82,6 +83,27 @@ public final class DBNinja {
 		 * so the cusomter id coming from the Order object will be -1.
 		 *
 		 */
+		connect_to_db();
+
+
+		try {
+			//UPDATE Order DB
+			PreparedStatement os;
+			String ordertablequery = "INSERT INTO ordertable (ordertable_OrderType, ordertable_OrderDateTime, " +
+					"ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, ordertable_customer_CustID)" +
+					"VALUES (?,?,?,?,?,?);";
+			os.connPrepareStatement(ordertablequery);
+
+			os.setString(1, o.getOrderType());
+			os.setTimestamp(2, o.getDate());
+			os.setBigDecimal(3, o.getCustPrice());
+			os.setBigDecimal(4, o.getBusPrice());
+			os.setBoolean(5, o.getIsComplete());
+			os.setInt(6, o.getCustID());
+			os.executeUpdate();
+		}
+
+
 	}
 
 	public static int addPizza(java.util.Date d, int orderID, Pizza p) throws SQLException, IOException {
@@ -113,7 +135,7 @@ public final class DBNinja {
 		try {
 			PreparedStatement os;
 			String query = "INSERT INTO customer (customer_Fname, customer_Lname, customer_PhoneNum)" +
-					"VALUES (?, ?, ?)";
+					"VALUES (?, ?, ?);";
 			os = conn.prepareStatement(query);
 
 			os.setString(1, c.getFName());
@@ -165,11 +187,11 @@ public final class DBNinja {
 				os.setInt(1, OrderID);
 				os.executeUpdate();
 
-				// mark pizzas as complete- keeping as separate in case it should be marked as "complete" instead
+				// mark pizzas as complete
 				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
 						"WHERE pizza_ordertable_OrderID = ?;";
 				os = conn.prepareStatement(Pizzaquery);
-				os.setObject(1, newState);
+				os.setObject(1, "COMPLETED");
 				os.setInt(2, OrderID);
 				rset = os.executeQuery();
 			}
