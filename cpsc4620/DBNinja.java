@@ -409,13 +409,13 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From order_table ";
+			query = "Select * From ordertable ";
 			if (status == 1) {
-				query += "WHERE isComplete = 0 ";
+				query += "WHERE ordertable.isComplete = 0 ";
 			} else if (status == 2) {
-				query += "WHERE isComplete = 1 ";
+				query += "WHERE ordertable.isComplete = 1 ";
 			}
-			query += "ORDER BY OrderID ASC;";
+			query += "ORDER BY ordertable.OrderID ASC;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 			while (rset.next()) {
@@ -473,7 +473,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "SELECT * From ordertable ORDER BY OrderDateTime DESC LIMIT 1;";
+			query = "SELECT * From ordertable ORDER BY ordertable_OrderDateTime DESC LIMIT 1;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 			while (rset.next()) {
