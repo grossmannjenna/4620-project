@@ -411,11 +411,11 @@ public final class DBNinja {
 			String query;
 			query = "Select * From ordertable ";
 			if (status == 1) {
-				query += "WHERE ordertable.isComplete = 0 ";
+				query += "WHERE ordertable_isComplete = 0 ";
 			} else if (status == 2) {
-				query += "WHERE ordertable.isComplete = 1 ";
+				query += "WHERE ordertable_isComplete = 1 ";
 			}
-			query += "ORDER BY ordertable.OrderID ASC;";
+			query += "ORDER BY ordertable_OrderID ASC;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 			while (rset.next()) {
