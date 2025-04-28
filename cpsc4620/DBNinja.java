@@ -854,10 +854,11 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select Topping.TopID, TopName, SmallAMT, MedAMT, LgAMT, XLAMT, CustPrice, BusPrice, MinINVT, CurINVT, IsDouble " +
-					"From PizzaToppings" +
-					"JOIN Topping ON PizzaToppings.TopID = Topping.TopID" +
-					"WHERE PizzaToppings.Pizza ID =?;";
+			query = "Select t.topping_TopID, t.topping_TopName, t.topping_SmallAMT, t.topping_MedAMT, t.topping_LgAMT, t.topping_XLAMT, " +
+					"t.topping_CustPrice, t.topping_BusPrice, t.topping_MinINVT, t.topping_CurINVT, pizza_topping_IsDouble " +
+					"From pizza_topping pt " +
+					"JOIN topping t ON pt.topping_TopID = t.topping_TopID " +
+					"WHERE pt.pizza_PizzaID =?;";
 			os = conn.prepareStatement(query);
 			os.setInt(1, p.getPizzaID());
 			rset = os.executeQuery();
