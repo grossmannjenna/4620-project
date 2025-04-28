@@ -304,24 +304,22 @@ public final class DBNinja {
 		 */
 
 		connect_to_db();
-		int newCustID = 0;
+		int newCustID = c.getCustID();
 
 		try {
 			PreparedStatement os;
-			String query = "INSERT INTO customer (customer_Fname, customer_Lname, customer_PhoneNum)" +
-					"VALUES (?, ?, ?);";
+			String query = "INSERT INTO customer (customer_CustID, customer_Fname, customer_Lname, customer_PhoneNum)" +
+					"VALUES (?, ?, ?, ?);";
 			os = conn.prepareStatement(query);
 
-			os.setString(1, c.getFName());
-			os.setString(2, c.getLName());
-			os.setString(3, c.getPhone());
+			os.setInt(1, c.getCustID());
+			os.setString(2, c.getFName());
+			os.setString(3, c.getLName());
+			os.setString(4, c.getPhone());
 			os.executeUpdate();
 
-			try (ResultSet generatedKey = os.getGeneratedKeys()) {
-				if (generatedKey.next()) {
-					newCustID = generatedKey.getInt(1);
-				}
-			}
+			os.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
@@ -356,7 +354,7 @@ public final class DBNinja {
 
 				// mark order as complete
 				String Orderquery = "UPDATE ordertable SET ordertable_isComplete = 1 " +
-						"WHERE ordertable_OrderID = ?;";
+						"WHERE ordertable_OrderID =?;";
 				os = conn.prepareStatement(Orderquery);
 				os.setInt(1, OrderID);
 				os.executeUpdate();
@@ -631,7 +629,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select customer_CustID, customer_FName, customer_LName, customer_Phone From customer ORDER BY customer_LName, customer_FName;";
+			query = "Select customer_CustID, customer_FName, customer_LName, customer_PhoneNum From customer ORDER BY customer_LName, customer_FName;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 			while (rset.next()) {
@@ -669,7 +667,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select customer_CustID, customer_FName, customer_LName From customer WHERE customer_Phone=?;";
+			query = "Select customer_CustID, customer_FName, customer_LName From customer WHERE customer_PhoneNum=?;";
 			os = conn.prepareStatement(query);
 			os.setString(1, phoneNumber);
 			rset = os.executeQuery();
