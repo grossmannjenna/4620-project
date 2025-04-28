@@ -865,18 +865,18 @@ public final class DBNinja {
 			rset = os.executeQuery();
 			while (rset.next()) {
 				Topping top = new Topping(
-						rset.getInt("TopID"),
-						rset.getString("TopName"),
-						rset.getDouble("SmallAMT"),
-						rset.getDouble("MedAMT"),
-						rset.getDouble("LgAMT"),
-						rset.getDouble("XLAMT"),
-						rset.getDouble("CustPrice"),
-						rset.getDouble("BusPrice"),
-						rset.getInt("MinINVT"),
-						rset.getInt("CurINVT")
+						rset.getInt("topping_TopID"),
+						rset.getString("topping_TopName"),
+						rset.getDouble("topping_SmallAMT"),
+						rset.getDouble("topping_MedAMT"),
+						rset.getDouble("topping_LgAMT"),
+						rset.getDouble("topping_XLAMT"),
+						rset.getDouble("topping_CustPrice"),
+						rset.getDouble("topping_BusPrice"),
+						rset.getInt("topping_MinINVT"),
+						rset.getInt("topping_CurINVT")
 				);
-				top.setDoubled(rset.getBoolean("IsDouble"));
+				top.setDoubled(rset.getBoolean("topping_IsDouble"));
 				pizzaToppings.add(top);
 			}
 		} catch (SQLException e) {
@@ -1135,8 +1135,8 @@ public final class DBNinja {
 
 			while(rset.next()) {
 
-				String topName = rset.getString("TopName");
-				int count = rset.getInt("ToppingCount");
+				String topName = rset.getString("ToppingPopularity_TopName");
+				int count = rset.getInt("ToppingPopularity_ToppingCount");
 
 				System.out.printf("%-20s %-20s\n", topName, count);
 
@@ -1179,10 +1179,10 @@ public final class DBNinja {
 
 			while(rset.next()) {
 
-				String size = rset.getString("PizzaSize");
-				String crust = rset.getString("PizzaCrust");
-				double profit = rset.getDouble("Profit");
-				String date = rset.getString("LastOrderDate");
+				String size = rset.getString("ProfitByPizza_Size");
+				String crust = rset.getString("ProfitByPizza_Crust");
+				double profit = rset.getDouble("ProfitByPizza_Profit");
+				String date = rset.getString("ProfitByPizza_LastOrderDate");
 
 				System.out.printf("%-15s %-15s %-9.2f %-20s\n", size, crust, profit, date);
 
@@ -1229,11 +1229,11 @@ public final class DBNinja {
 
 			while(rset.next()) {
 
-				String type = rset.getString("OrderType");
-				String date = rset.getString("OrderMonth");
-				double price = rset.getDouble("TotalCustPrice");
-				double cost = rset.getDouble("TotalBusPrice");
-				double profit = rset.getDouble("Profit");
+				String type = rset.getString("ProfitByOrderType_OrderType");
+				String date = rset.getString("ProfitByOrderType_OrderMonth");
+				double price = rset.getDouble("ProfitByOrderType_TotalCustPrice");
+				double cost = rset.getDouble("ProfitByOrderType_TotalBusPrice");
+				double profit = rset.getDouble("ProfitByOrderType_Profit");
 
 				System.out.printf("%-15s %-15s $%-19.2f $%-19.2f %-10.2f\n", type, date, price, cost, profit);
 
