@@ -678,14 +678,14 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select customer_CustID, customer_FName, customer_LName, customer_PhoneNum From customer ORDER BY customer_LName, customer_FName;";
+			query = "Select customer_CustID, customer_FName, customer_LName, customer_PhoneNum From customer ORDER BY customer_CustID;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 			while (rset.next()) {
 				int id = rset.getInt("customer_CustID");
 				String fname = rset.getString("customer_FName");
 				String lname = rset.getString("customer_LName");
-				String phone = rset.getString("customer_Phone"); // note the use of field names in the getSting methods
+				String phone = rset.getString("customer_PhoneNum"); // note the use of field names in the getSting methods
 				Customer customer = new Customer(id, fname, lname, phone);
 
 				customerList.add(customer);
@@ -716,7 +716,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select customer_CustID, customer_FName, customer_LName From customer WHERE customer_PhoneNum=?;";
+			query = "Select customer_CustID, customer_FName, customer_LName From customer WHERE customer_PhoneNum=? ORDER BY customer_CustID;";
 			os = conn.prepareStatement(query);
 			os.setString(1, phoneNumber);
 			rset = os.executeQuery();
