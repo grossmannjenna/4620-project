@@ -923,11 +923,11 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "SELECT pizza_PizzaID, baseprice_Size, baseprice_CrustType," +
-					"pizza_PizzaState, pizza_PizzaDate, pizza_CustPrice,pizza_BusPrice, " +
-					"ordertable_OrderID from pizza" +
-					"JOIN ordertable ON pizza.ordertable_OrderID = ordertable.ordertable_OrderID" +
-					"WHERE pizza.ordertable_OrderID = ?;";
+			query = "SELECT p.pizza_PizzaID, p.pizza_Size, p.pizza_CrustType, p.pizza_PizzaState, " +
+					"p.pizza_PizzaDate, p.pizza_CustPrice, p.pizza_BusPrice, o.ordertable_OrderID " +
+					"from pizza p " +
+					"JOIN ordertable o ON p.ordertable_OrderID = o.ordertable_OrderID " +
+					"WHERE p.ordertable_OrderID =?;";
 			os = conn.prepareStatement(query);
 			os.setInt(1, o.getOrderID());
 			rset = os.executeQuery();
