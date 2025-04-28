@@ -678,7 +678,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select customer_CustID, customer_FName, customer_LName, customer_PhoneNum From customer ORDER BY customer_CustID;";
+			query = "Select customer_CustID, customer_FName, customer_LName, customer_PhoneNum From customer ORDER BY customer_LName, customer_FName;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 			while (rset.next()) {
