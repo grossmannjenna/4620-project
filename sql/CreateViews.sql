@@ -2,7 +2,7 @@
 -- Jenna Grossmann: ProfitByPizza View
 
 # View 1
-CREATE OR REPLACE VIEW PizzaDB.ToppingPopularity AS
+CREATE VIEW PizzaDB.ToppingPopularity AS
     SELECT T.TopName as Topping,
            SUM(CASE WHEN PT.IsDouble = 1 THEN 2
                     WHEN PT.IsDouble = 0 THEN 1
@@ -14,7 +14,7 @@ CREATE OR REPLACE VIEW PizzaDB.ToppingPopularity AS
     ORDER BY ToppingCount DESC, TopName ASC;
 
 # View 2
-CREATE OR REPLACE VIEW PizzaDB.ProfitByPizza AS
+CREATE VIEW PizzaDB.ProfitByPizza AS
     SELECT B.Size, B.CrustType AS Crust,
            SUM(B.CustPrice-B.BusPrice) AS Profit, DATE_FORMAT(B.PizzaDate, '%c/%Y') AS OrderMonth
     FROM pizza B
@@ -23,7 +23,7 @@ CREATE OR REPLACE VIEW PizzaDB.ProfitByPizza AS
     ORDER BY Profit;
 
 # View 3
-CREATE OR REPLACE VIEW PizzaDB.ProfitByOrderType AS
+CREATE VIEW PizzaDB.ProfitByOrderType AS
     SELECT OrderType AS customerType,
            DATE_FORMAT(OrderDateTime, '%c/%Y') AS OrderMonth,
            ROUND(SUM(CustPrice), 2) AS TotalOrderPrice,
