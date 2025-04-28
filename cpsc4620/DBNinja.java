@@ -576,6 +576,9 @@ public final class DBNinja {
 				boolean complete = rset.getBoolean("ordertable_isComplete");
 				Order order = new Order(Orderid, cusid, ordertype, date, custprice, busprice, complete);
 
+				order.setPizzaList(getPizzas(order));
+				order.setDiscountList(getDiscounts(order));
+
 				orderList.add(order);
 			}
 		} catch (SQLException e) {
@@ -584,7 +587,6 @@ public final class DBNinja {
 		}
 
 		conn.close();
-
 		return orderList;
 	}
 
