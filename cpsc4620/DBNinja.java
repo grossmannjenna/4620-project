@@ -969,7 +969,7 @@ public final class DBNinja {
 						rset.getInt("topping_MinINVT"),
 						rset.getInt("topping_CurINVT")
 				);
-				top.setDoubled(rset.getBoolean("topping_IsDouble"));
+				top.setDoubled(rset.getBoolean("pizza_topping_IsDouble"));
 				pizzaToppings.add(top);
 			}
 		} catch (SQLException e) {
@@ -1037,6 +1037,7 @@ public final class DBNinja {
 						rset.getDouble("pizza_CustPrice"),
 						rset.getDouble("pizza_BusPrice")
 				);
+
 				pizzas.add(pizza);
 			}
 
