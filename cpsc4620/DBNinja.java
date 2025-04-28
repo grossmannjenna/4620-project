@@ -200,7 +200,7 @@ public final class DBNinja {
 					PreparedStatement disOS;
 					String disQuery;
 
-					disQuery = "INSERT INTO pizza_discount (pizza_PizzaID, discount_DiscountID)\n" +
+					disQuery = "INSERT INTO pizza_discount (pizza_PizzaID, discount_DiscountID) " +
 							"VALUES (?, ?);";
 					disOS = conn.prepareStatement(disQuery);
 
@@ -429,16 +429,57 @@ public final class DBNinja {
 
 				Order order = null;
 
-				if (orderType.equalsIgnoreCase("dine_in")) {
-					int tableNum = rset.getInt("TableNum");
+				if (orderType.equalsIgnoreCase("dinein")) {
+					String query1 = "SELECT dinein_TableNum FROM dinein WHERE ordertable_OrderID=?;";
+					PreparedStatement dineinStatement = conn.prepareStatement(query1);
+					dineinStatement.setInt(1, orderID);
+					ResultSet dineinResult = dineinStatement.executeQuery();
+
+					int tableNum = -1;
+					if (dineinResult.next()) {
+						tableNum = dineinResult.getInt("dinein_tableNum");
+					}
+					dineinStatement.close();
+					dineinResult.close();
+
 					order = new DineinOrder(orderID, custID, date, custPrice, busPrice, complete, tableNum);
 				} else if (orderType.equalsIgnoreCase("pickup")) {
-					boolean pickUp = rset.getBoolean("IsPickedUp");
-					order = new PickupOrder(orderID, custID, date, custPrice, busPrice, pickUp, complete);
+					String query2 = "SELECT pickup_IsPickedUp FROM pickup WHERE ordertable_OrderID=?;";
+					PreparedStatement pickupStatement = conn.prepareStatement(query2);
+					pickupStatement.setInt(1, orderID);
+					ResultSet pickupResult = pickupStatement.executeQuery();
+
+					boolean pickup = false;
+					if (pickupResult.next()) {
+						pickup = pickupResult.getBoolean("pickup_IsPickedUp");
+					}
+					pickupStatement.close();
+					pickupResult.close();
+
+					order = new PickupOrder(orderID, custID, date, custPrice, busPrice, pickup, complete);
 				} else if (orderType.equalsIgnoreCase("delivery")) {
-					String addy = rset.getString("Address");
-					boolean delivered = rset.getBoolean("IsDelivered");
-					order = new DeliveryOrder(orderID, custID, date, custPrice, busPrice, complete, delivered, addy);
+					String query3 = "SELECT delivery_HouseNum, delivery_Street, delivery_City, delivery_State, delivery_Zip, delivery_IsDelivered FROM delivery WHERE ordertable_OrderID=?;";
+					PreparedStatement deliveryStatement = conn.prepareStatement(query3);
+					deliveryStatement.setInt(1, orderID);
+					ResultSet deliveryResult = deliveryStatement.executeQuery();
+
+					boolean isDelivered = false;
+					String address = "";
+
+					if (deliveryResult.next()) {
+						String num = deliveryResult.getString("delivery_HouseNum");
+						String street = deliveryResult.getString("delivery_Street");
+						String city = deliveryResult.getString("delivery_City");
+						String state = deliveryResult.getString("delivery_State");
+						String zip = deliveryResult.getString("delivery_Zip");
+						isDelivered = deliveryResult.getBoolean("delivery_IsDelivered");
+
+						address = num + "\t" + street + "\t" + city + "\t" + state + "\t" + zip;
+					}
+					deliveryStatement.close();
+					deliveryResult.close();
+
+					order = new DeliveryOrder(orderID, custID, date, custPrice, busPrice, complete, isDelivered, address);
 				}
 
 				if (order != null) {
@@ -556,7 +597,7 @@ public final class DBNinja {
 			PreparedStatement ps;
 			ResultSet rset;
 			String query;
-			query = "Select discount_DiscountID, discount_DiscountName, discount_Amount, discount_IsPercent From discount" +
+			query = "Select discount_DiscountID, discount_DiscountName, discount_Amount, discount_IsPercent From discount " +
 					"ORDER BY discount_DiscountName;";
 			ps = conn.prepareStatement(query);
 			rset = ps.executeQuery();
@@ -848,7 +889,7 @@ public final class DBNinja {
 		 * The list can then be added to the Pizza object elsewhere in the
 		 */
 
-		connect_to_db();
+		//connect_to_db();
 		ArrayList<Topping> pizzaToppings = new ArrayList<>();
 
 		try {
@@ -884,7 +925,7 @@ public final class DBNinja {
 			// process the error or re-raise the exception to a higher level
 		}
 
-		conn.close();
+		//conn.close();
 
 		return pizzaToppings;
 	}
@@ -919,7 +960,7 @@ public final class DBNinja {
 		 * Build an ArrayList of all the Pizzas associated with the Order.
 		 *
 		 */
-		connect_to_db();
+		//connect_to_db();
 		ArrayList<Pizza> pizzas = new ArrayList<>();
 
 		try {
@@ -953,7 +994,7 @@ public final class DBNinja {
 			// process the error or re-raise the exception to a higher level
 		}
 
-		conn.close();
+		//conn.close();
 
 		return pizzas;
 	}
@@ -964,16 +1005,16 @@ public final class DBNinja {
 		 * Build an array list of all the Discounts associted with the Order.
 		 *
 		 */
-		connect_to_db();
+		// connect_to_db();
 		ArrayList<Discount> discounts = new ArrayList<>();
 
 		try {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "SELECT d.discount_DiscountID, d.discount_DiscountName, d.discount_Amount, d.discount_IsPercent" +
-					"from discount d" +
-					"JOIN order_discount od ON d.discount_DiscountID = od.ordertable_OrderID" +
+			query = "SELECT d.discount_DiscountID, d.discount_DiscountName, d.discount_Amount, d.discount_IsPercent " +
+					"from discount d " +
+					"JOIN order_discount od ON d.discount_DiscountID = od.discount_DiscountID " +
 					"WHERE od.ordertable_OrderID = ?;";
 			os = conn.prepareStatement(query);
 			os.setInt(1, o.getOrderID());
@@ -992,7 +1033,7 @@ public final class DBNinja {
 			// process the error or re-raise the exception to a higher level
 		}
 
-		conn.close();
+		//conn.close();
 
 		return discounts;
 	}
@@ -1003,16 +1044,16 @@ public final class DBNinja {
 		 * Build an array list of all the Discounts associted with the Pizza.
 		 *
 		 */
-		connect_to_db();
+		//connect_to_db();
 		ArrayList<Discount> discounts = new ArrayList<>();
 
 		try {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "SELECT d.discount_DiscountID, d.discount_DiscountName, d.discount_Amount, d.discount_IsPercent" +
-					"from discount d" +
-					"JOIN pizza_discount pd ON d.discount_DiscountID = pd.discount_DiscountID" +
+			query = "SELECT d.discount_DiscountID, d.discount_DiscountName, d.discount_Amount, d.discount_IsPercent " +
+					"from discount d " +
+					"JOIN pizza_discount pd ON d.discount_DiscountID = pd.discount_DiscountID " +
 					"WHERE pd.pizza_pizzaID = ?;";
 			os = conn.prepareStatement(query);
 			os.setInt(1, p.getPizzaID());
@@ -1030,7 +1071,7 @@ public final class DBNinja {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
-		conn.close();
+		//conn.close();
 
 		return discounts;
 
