@@ -968,10 +968,10 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "SELECT discount_DiscountID, discount_DiscountName, discount_Amount, discountIsPercent" +
-					"from discount" +
-					"JOIN order_discount ON discount.discount_DiscountID = order_discount.ordertable_OrderID" +
-					"WHERE order_discount.ordertable_OrderID = ?;";
+			query = "SELECT d.discount_DiscountID, d.discount_DiscountName, d.discount_Amount, d.discount_IsPercent" +
+					"from discount d" +
+					"JOIN order_discount od ON d.discount_DiscountID = od.ordertable_OrderID" +
+					"WHERE od.ordertable_OrderID = ?;";
 			os = conn.prepareStatement(query);
 			os.setInt(1, o.getOrderID());
 			rset = os.executeQuery();
