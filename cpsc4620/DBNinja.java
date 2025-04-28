@@ -91,7 +91,7 @@ public final class DBNinja {
 			PreparedStatement os;
 
 			String ordertablequery = "INSERT INTO ordertable (ordertable_OrderType, ordertable_OrderDateTime, " +
-					"ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID)" +
+					"ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID) " +
 					"VALUES (?,?,?,?,?,?);";
 			os = conn.prepareStatement(ordertablequery, Statement.RETURN_GENERATED_KEYS);
 
@@ -238,8 +238,8 @@ public final class DBNinja {
 		try {
 			PreparedStatement os;
 			String query;
-			query = "INSERT INTO pizza (pizza_Size ,pizza_CrustType, pizza_PizzaState, " +
-					"pizza_PizzaDate,pizza_CustPrice, pizza_BusPrice,ordertable_OrderID)" +
+			query = "INSERT INTO pizza (pizza_Size, pizza_CrustType, pizza_PizzaState, " +
+					"pizza_PizzaDate, pizza_CustPrice, pizza_BusPrice, ordertable_OrderID) " +
 					"VALUES (?, ?, ?, ?, ?, ?, ?);";
 			os = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -309,7 +309,7 @@ public final class DBNinja {
 
 		try {
 			PreparedStatement os;
-			String query = "INSERT INTO customer (customer_CustID, customer_Fname, customer_Lname, customer_PhoneNum)" +
+			String query = "INSERT INTO customer (customer_CustID, customer_Fname, customer_Lname, customer_PhoneNum) " +
 					"VALUES (?, ?, ?, ?);";
 			os = conn.prepareStatement(query);
 
@@ -560,9 +560,9 @@ public final class DBNinja {
 			PreparedStatement ps;
 			ResultSet rset;
 			String query;
-			query = "SELECT ordertable_OrderID, ordertable_OrderType," +
-					"       ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID" +
-					"FROM ordertable" +
+			query = "SELECT ordertable_OrderID, ordertable_OrderType, " +
+					"ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID " +
+					"FROM ordertable " +
 					"WHERE DATE(ordertable_OrderDateTime) = ?";
 			ps = conn.prepareStatement(query);
 			ps.setString(1, date);
@@ -640,7 +640,7 @@ public final class DBNinja {
 			PreparedStatement ps;
 			ResultSet rset;
 			String query;
-			query = "Select discount_DiscountID, discount_DiscountName, discount_Amount, discount_IsPercent" +
+			query = "Select discount_DiscountID, discount_DiscountName, discount_Amount, discount_IsPercent " +
 					"from Discount Where discount_DiscountName=?;";
 			ps = conn.prepareStatement(query);
 			ps.setString(1, name);
@@ -661,7 +661,6 @@ public final class DBNinja {
 		conn.close();
 		return discount;
 	}
-
 
 	// COMPLETE - ELLE
 	public static ArrayList<Customer> getCustomerList() throws SQLException, IOException {
