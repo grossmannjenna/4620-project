@@ -766,7 +766,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From Topping WHERE topping_CurINVT > 0 ORDER BY topping_TopName;";
+			query = "Select * From topping WHERE topping_CurINVT > 0 ORDER BY topping_TopName;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 			while (rset.next()) {
@@ -809,7 +809,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From topping Where topping_CurINVT > 0 ORDER BY topping_TopName;";
+			query = "Select * From topping Where topping_TopName=?;";
 			os = conn.prepareStatement(query);
 			os.setString(1, name);
 			rset = os.executeQuery();
