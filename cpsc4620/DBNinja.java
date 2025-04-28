@@ -514,9 +514,10 @@ public final class DBNinja {
 			PreparedStatement ps;
 			ResultSet rset;
 			String query;
-			query = "Select ordertable_OrderID, ordertable_OrderType,"
-					+ "ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID" +
-					"From ordertable Where ordertable_OrderDateTime = ?;";
+			query = "SELECT ordertable_OrderID, ordertable_OrderType," +
+					"       ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID" +
+					"FROM ordertable" +
+					"WHERE DATE(ordertable_OrderDateTime) = ?";
 			ps = conn.prepareStatement(query);
 			ps.setString(1, date);
 			rset = ps.executeQuery();
