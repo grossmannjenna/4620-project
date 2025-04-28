@@ -689,7 +689,7 @@ public final class DBNinja {
 			ResultSet rset;
 			String query;
 			query = "Select discount_DiscountID, discount_DiscountName, discount_Amount, discount_IsPercent " +
-					"from Discount Where discount_DiscountName=?;";
+					"from discount Where discount_DiscountName=?;";
 			ps = conn.prepareStatement(query);
 			ps.setString(1, name);
 			rset = ps.executeQuery();
@@ -992,13 +992,12 @@ public final class DBNinja {
 
 		try {
 			PreparedStatement os;
-			ResultSet rset;
 			String query;
-			query = "UPDATE topping SET topping_CurINVT = topping_curINVT + ? WHERE topping_TopID = ?;";
+			query = "UPDATE topping SET topping_CurINVT = topping_CurINVT + ? WHERE topping_TopID = ?;";
 			os = conn.prepareStatement(query);
 			os.setDouble(1, quantity);
 			os.setInt(2, toppingID);
-			rset = os.executeQuery();
+			os.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
@@ -1219,21 +1218,25 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From ToppingPopularity ORDER BY ToppingCount DESC TopName ASC;";
+			query = "Select * From ToppingPopularity;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 
-			System.out.printf("%-20s %-20s\n", "Topping", "Topping Count");
-			System.out.printf("%-20s %-20s\n", "-------", "-------------");
+			System.out.printf("%-25s %-15s\n", "Topping", "Topping Count");
+			System.out.printf("%-25s %-15s\n", "-------", "-------------");
 
 			while(rset.next()) {
 
-				String topName = rset.getString("ToppingPopularity_TopName");
-				int count = rset.getInt("ToppingPopularity_ToppingCount");
+				String topName = rset.getString("Topping");
+				int count = rset.getInt("ToppingCount");
 
-				System.out.printf("%-20s %-20s\n", topName, count);
+				System.out.printf("%-25s %-15d\n", topName, count);
 
 			}
+
+			os.close();
+			rset.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1272,10 +1275,10 @@ public final class DBNinja {
 
 			while(rset.next()) {
 
-				String size = rset.getString("ProfitByPizza_Size");
-				String crust = rset.getString("ProfitByPizza_Crust");
-				double profit = rset.getDouble("ProfitByPizza_Profit");
-				String date = rset.getString("ProfitByPizza_LastOrderDate");
+				String size = rset.getString("Size");
+				String crust = rset.getString("Crust");
+				double profit = rset.getDouble("Profit");
+				String date = rset.getString("OrderMonth");
 
 				System.out.printf("%-15s %-15s %-9.2f %-20s\n", size, crust, profit, date);
 
@@ -1309,33 +1312,30 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From ProfitByOrderType ORDER BY OrderType, OrderMonth;";
+			query = "Select * From ProfitByOrderType;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 
 			System.out.printf("%-15s %-15s %-20s %-20s %-10s\n", "Customer Type", "Order Month", "Total Order Price", "Total Order Cost", "Profit");
 			System.out.printf("%-15s %-15s %-20s %-20s %-10s\n", "-------------", "-----------", "-----------------", "----------------", "------");
 
-			double totalPrice = 0.0;
-			double totalCost = 0.0;
-			double totalProfit = 0.0;
-
 			while(rset.next()) {
 
-				String type = rset.getString("ProfitByOrderType_OrderType");
-				String date = rset.getString("ProfitByOrderType_OrderMonth");
-				double price = rset.getDouble("ProfitByOrderType_TotalCustPrice");
-				double cost = rset.getDouble("ProfitByOrderType_TotalBusPrice");
-				double profit = rset.getDouble("ProfitByOrderType_Profit");
+				String type = rset.getString("customerType");
+				String date = rset.getString("OrderMonth");
+				double price = rset.getDouble("TotalOrderPrice");
+				double cost = rset.getDouble("TotalOrderCost");
+				double profit = rset.getDouble("Profit");
 
-				System.out.printf("%-15s %-15s $%-19.2f $%-19.2f %-10.2f\n", type, date, price, cost, profit);
+				if (date.equals("Grand Total")) {
+					System.out.printf("%-31s $%-19.2f $%-19.2f %-10.2f\n", "Grand Total", price, cost, profit);
+				} else {
+					System.out.printf("%-15s %-15s $%-19.2f $%-19.2f %-10.2f\n", type, date, price, cost, profit);
+				}
 
-				totalPrice += price;
-				totalCost += cost;
-				totalProfit += profit;
 			}
-
-			System.out.printf("%-31s $%-19.2f $%-19.2 %-10.2f\n", "Grand Total", totalPrice, totalCost, totalProfit);
+			os.close();
+			rset.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
