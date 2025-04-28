@@ -518,7 +518,7 @@ public final class DBNinja {
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 			while (rset.next()) {
-				int orderid = rset.getInt("orderTable_OrderID");
+				int orderid = rset.getInt("ordertable_OrderID");
 				int custid = rset.getInt("customer_CustID");
 				String type = rset.getString("ordertable_OrderType");
 				String datetime = rset.getString("ordertable_OrderDateTime");
@@ -528,7 +528,12 @@ public final class DBNinja {
 
 				order = new Order(orderid, custid, type, datetime, custprice, busprice, complete);
 
+				order.setPizzaList(getPizzas(order));
+				order.setDiscountList(getDiscounts(order));
 			}
+			os.close();
+			rset.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
