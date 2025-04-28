@@ -419,13 +419,13 @@ public final class DBNinja {
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 			while (rset.next()) {
-				int orderID = rset.getInt("OrderID");
-				int custID = rset.getInt("CustID");
-				String orderType = rset.getString("OrderType");
-				String date = rset.getString("Date");
-				double custPrice = rset.getDouble("CustPrice");
-				double busPrice = rset.getDouble("BusPrice");
-				boolean complete = rset.getBoolean("isComplete");
+				int orderID = rset.getInt("ordertable_OrderID");
+				int custID = rset.getInt("customer_CustID");
+				String orderType = rset.getString("ordertable_OrderType");
+				String date = rset.getString("ordertable_OrderDateTime");
+				double custPrice = rset.getDouble("ordertable_CustPrice");
+				double busPrice = rset.getDouble("ordertable_BusPrice");
+				boolean complete = rset.getBoolean("ordertable_isComplete");
 
 				Order order = null;
 
