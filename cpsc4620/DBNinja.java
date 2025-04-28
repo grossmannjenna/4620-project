@@ -164,6 +164,31 @@ public final class DBNinja {
 
 			// insert pizzas
 			for(Pizza pizza : o.getPizzaList()) {
+				double baseCustPrice = 0.0;
+				double baseBusPrice = 0.0;
+
+				switch (pizza.getSize()) {
+					case "Small":
+						baseCustPrice = 3.00;
+						baseBusPrice = 0.50;
+						break;
+					case "Medium":
+						baseCustPrice = 5.00;
+						baseBusPrice = 1.00;
+						break;
+					case "Large":
+						baseCustPrice = 7.00;
+						baseBusPrice = 1.75;
+						break;
+					case "XLarge":
+						baseCustPrice = 9.00;
+						baseBusPrice = 2.00;
+						break;
+				}
+
+				pizza.setCustPrice(pizza.getCustPrice() + baseCustPrice);
+				pizza.setBusPrice(pizza.getBusPrice() + baseBusPrice);
+				
 				String pizzaQuery = "INSERT INTO pizza (pizza_Size ,pizza_CrustType, pizza_PizzaState, " +
 						"pizza_PizzaDate,pizza_CustPrice, pizza_BusPrice,ordertable_OrderID)" +
 						"VALUES (?, ?, ?, ?, ?, ?, ?);";
@@ -1037,6 +1062,9 @@ public final class DBNinja {
 						rset.getDouble("pizza_CustPrice"),
 						rset.getDouble("pizza_BusPrice")
 				);
+
+				pizza.setToppings(getToppingsOnPizza(pizza));
+				pizza.setDiscounts(getDiscounts(pizza));
 
 				pizzas.add(pizza);
 			}
