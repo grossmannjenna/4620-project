@@ -607,7 +607,7 @@ public final class DBNinja {
 			ps = conn.prepareStatement(query);
 			rset = ps.executeQuery();
 			while (rset.next()) {
-				int id = rset.getInt("dicount_DiscountID");
+				int id = rset.getInt("discount_DiscountID");
 				String name = rset.getString("discount_DiscountName");
 				Double amount = rset.getDouble("discount_Amount");
 				Boolean ispercent = rset.getBoolean("discount_IsPercent");
