@@ -368,7 +368,6 @@ public final class DBNinja {
 
 		try {
 			PreparedStatement os;
-			ResultSet rset;
 
 			// change pizza statuses
 			if (newState == order_state.PREPARED) {
@@ -379,23 +378,50 @@ public final class DBNinja {
 				os = conn.prepareStatement(Orderquery);
 				os.setInt(1, OrderID);
 				os.executeUpdate();
+				os.close();
 
 				// mark pizzas as complete
-				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
+				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = 'completed' " +
 						"WHERE ordertable_OrderID = ?;";
 				os = conn.prepareStatement(Pizzaquery);
-				os.setObject(1, "COMPLETED");
-				os.setInt(2, OrderID);
-				rset = os.executeQuery();
-			}
-			// PICKUP and DELIVERD(can just be updated with corresponding state)
-			else {
-				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
-						"WHERE ordertable_OrderID = ?;";
+				os.setInt(1, OrderID);
+				os.executeUpdate();
+				os.close();
+
+			} else if (newState == order_state.PICKEDUP) {
+				// mark pizza as picked up
+				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = 'pickedup' " +
+						"WHERE ordertable_OrderID =?;";
 				os = conn.prepareStatement(Pizzaquery);
-				os.setObject(1, newState);
-				os.setInt(2, OrderID);
-				rset = os.executeQuery();
+				os.setInt(1, OrderID);
+				os.executeUpdate();
+				os.close();
+
+				// mark pickup table as picked up
+				String pickupQuery = "UPDATE pickup SET pickup_IsPickedUp = 1 " +
+						"WHERE ordertable_OrderID = ?;";
+				os = conn.prepareStatement(pickupQuery);
+				os.setInt(1, OrderID);
+				os.executeUpdate();
+				os.close();
+
+			} else if (newState == order_state.DELIVERED) {
+				// mark pizza as delivered
+				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = 'delivered' " +
+						"WHERE ordertable_OrderID =?;";
+				os = conn.prepareStatement(Pizzaquery);
+				os.setInt(1, OrderID);
+				os.executeUpdate();
+				os.close();
+
+				// mark pickup table as picked up
+				String deliveryQuery = "UPDATE delivery SET delivery_IsDelivered = 1 " +
+						"WHERE ordertable_OrderID = ?;";
+				os = conn.prepareStatement(deliveryQuery);
+				os.setInt(1, OrderID);
+				os.executeUpdate();
+				os.close();
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
