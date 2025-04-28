@@ -91,7 +91,7 @@ public final class DBNinja {
 			PreparedStatement os;
 
 			String ordertablequery = "INSERT INTO ordertable (ordertable_OrderType, ordertable_OrderDateTime, " +
-					"ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, ordertable_customer_CustID)" +
+					"ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID)" +
 					"VALUES (?,?,?,?,?,?);";
 			os = conn.prepareStatement(ordertablequery, Statement.RETURN_GENERATED_KEYS);
 
@@ -361,7 +361,7 @@ public final class DBNinja {
 
 				// mark pizzas as complete
 				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
-						"WHERE pizza_ordertable_OrderID = ?;";
+						"WHERE ordertable_OrderID = ?;";
 				os = conn.prepareStatement(Pizzaquery);
 				os.setObject(1, "COMPLETED");
 				os.setInt(2, OrderID);
@@ -370,7 +370,7 @@ public final class DBNinja {
 			// PICKUP and DELIVERD(can just be updated with corresponding state)
 			else {
 				String Pizzaquery = "UPDATE pizza SET pizza_PizzaState = ? " +
-						"WHERE pizza_ordertable_OrderID = ?;";
+						"WHERE ordertable_OrderID = ?;";
 				os = conn.prepareStatement(Pizzaquery);
 				os.setObject(1, newState);
 				os.setInt(2, OrderID);
@@ -807,7 +807,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From Topping Where Topping_CurINVT > 0 ORDER BY Topdping_TopName;";
+			query = "Select * From Topping Where Topping_CurINVT > 0 ORDER BY Topping_TopName;";
 			os = conn.prepareStatement(query);
 			os.setString(1, name);
 			rset = os.executeQuery();
@@ -923,7 +923,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "SELECT pizza_PizzaID, pizza_baseprice_Size, pizza_baseprice_CrustType," +
+			query = "SELECT pizza_PizzaID, baseprice_Size, baseprice_CrustType," +
 					"pizza_PizzaState, pizza_PizzaDate, pizza_CustPrice,pizza_BusPrice, " +
 					"ordertable_OrderID from pizza" +
 					"JOIN ordertable ON pizza.ordertable_OrderID = ordertable.ordertable_OrderID" +
@@ -1007,10 +1007,10 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "SELECT discount_DiscountID, discount_DiscountName, discount_Amount, discountIsPercent" +
-					"from discount" +
-					"JOIN pizza_discount ON discount.discount_DiscountID = pizza_discount.pizza_OrderID" +
-					"WHERE pizza_discount.pizza_OrderID = ?;";
+			query = "SELECT d.discount_DiscountID, d.discount_DiscountName, d.discount_Amount, d.discount_IsPercent" +
+					"from discount d" +
+					"JOIN pizza_discount pd ON d.discount_DiscountID = pd.discount_DiscountID" +
+					"WHERE pd.pizza_pizzaID = ?;";
 			os = conn.prepareStatement(query);
 			os.setInt(1, p.getPizzaID());
 			rset = os.executeQuery();
