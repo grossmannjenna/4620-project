@@ -102,6 +102,8 @@ public final class DBNinja {
 			os.setBoolean(5, o.getIsComplete());
 			if(o.getCustID() != -1) {  //check if the order is dine in
 				os.setInt(6, o.getCustID());
+			} else {
+				os.setNull(6, java.sql.Types.INTEGER);
 			}
 			os.executeUpdate();
 
@@ -134,9 +136,15 @@ public final class DBNinja {
 							"VALUES (?, ?, ?, ?, ?, ?,?);";
 					ot = conn.prepareStatement(deliveryQuery);
 
+					String[] addressParts = delivery.getAddress().split("\t");
+
 					ot.setInt(1, orderID);
-					ot.setString(2, delivery.getAddress());
-					ot.setBoolean(3, false);
+					ot.setString(2, addressParts[0]);
+					ot.setString(3, addressParts[1]);
+					ot.setString(4, addressParts[2]);
+					ot.setString(5, addressParts[3]);
+					ot.setString(6, addressParts[4]);
+					ot.setBoolean(7, false);
 
 					ot.executeUpdate();
 					ot.close();
@@ -210,8 +218,16 @@ public final class DBNinja {
 					disOS.close();
 				}
 			}
+			for (Discount disc : o.getDiscountList()) {
+				String queryOD = "INSERT INTO order_discount (ordertable_OrderID, discount_DiscountID) VALUES (?, ?);";
+				PreparedStatement odps = conn.prepareStatement(queryOD);
 
+				odps.setInt(1, orderID);
+				odps.setInt(2, disc.getDiscountID());
 
+				odps.executeUpdate();
+				odps.close();
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
@@ -309,16 +325,20 @@ public final class DBNinja {
 
 		try {
 			PreparedStatement os;
-			String query = "INSERT INTO customer (customer_CustID, customer_Fname, customer_Lname, customer_PhoneNum) " +
-					"VALUES (?, ?, ?, ?);";
-			os = conn.prepareStatement(query);
+			String query = "INSERT INTO customer (customer_Fname, customer_Lname, customer_PhoneNum) " +
+					"VALUES (?, ?, ?);";
+			os = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-			os.setInt(1, c.getCustID());
-			os.setString(2, c.getFName());
-			os.setString(3, c.getLName());
-			os.setString(4, c.getPhone());
+			os.setString(1, c.getFName());
+			os.setString(2, c.getLName());
+			os.setString(3, c.getPhone());
 			os.executeUpdate();
 
+			ResultSet keys = os.getGeneratedKeys();
+			if (keys.next()) {
+				int custID = keys.getInt(1);
+				c.setCustID(custID);
+			}
 			os.close();
 
 		} catch (SQLException e) {
@@ -1097,7 +1117,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select pizza_CustPrice From Pizza WHERE pizza_Size=? AND pizza_CrustType=?;";
+			query = "Select pizza_CustPrice From pizza WHERE pizza_Size=? AND pizza_CrustType=?;";
 			os = conn.prepareStatement(query);
 			os.setString(1, size);
 			os.setString(2, crust);
@@ -1131,7 +1151,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select pizza_BusPrice From Pizza WHERE pizza_Size=? AND pizza_CrustType=?;";
+			query = "Select pizza_BusPrice From pizza WHERE pizza_Size=? AND pizza_CrustType=?;";
 			os = conn.prepareStatement(query);
 			os.setString(1, size);
 			os.setString(2, crust);
