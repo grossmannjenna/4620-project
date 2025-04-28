@@ -156,8 +156,8 @@ public final class DBNinja {
 
 			// insert pizzas
 			for(Pizza pizza : o.getPizzaList()) {
-				String pizzaQuery = "INSERT INTO pizza(baseprice_Size, baseprice_CrustType, pizza_PizzaState," +
-						"pizza_pizzaDate, pizza_CustPrice, pizza_BusPrice, ordertable_OrderID)" +
+				String pizzaQuery = "INSERT INTO pizza (pizza_Size ,pizza_CrustType, pizza_PizzaState, " +
+						"pizza_PizzaDate,pizza_CustPrice, pizza_BusPrice,ordertable_OrderID)" +
 						"VALUES (?, ?, ?, ?, ?, ?, ?);";
 				PreparedStatement pzs = conn.prepareStatement(pizzaQuery, PreparedStatement.RETURN_GENERATED_KEYS);
 
@@ -185,7 +185,7 @@ public final class DBNinja {
 					PreparedStatement topOS;
 					String topQuery;
 
-					topQuery = "INSERT INTO pizza_topping(PizzaID, TopID, IsDouble) " +
+					topQuery = "INSERT INTO pizza_topping(pizza_PizzaID, topping_TopID, pizza_topping_IsDouble)\n" +
 							"VALUES (?, ?, ?);";
 					topOS = conn.prepareStatement(topQuery);
 					topOS.setInt(1, pizzaID);
@@ -200,7 +200,7 @@ public final class DBNinja {
 					PreparedStatement disOS;
 					String disQuery;
 
-					disQuery = "INSERT INTO pizza_discount (PizzaID, DiscountID) " +
+					disQuery = "INSERT INTO pizza_discount (pizza_PizzaID, discount_DiscountID)\n" +
 							"VALUES (?, ?);";
 					disOS = conn.prepareStatement(disQuery);
 
@@ -238,7 +238,8 @@ public final class DBNinja {
 		try {
 			PreparedStatement os;
 			String query;
-			query = "INSERT INTO pizza (OrderID, Size, CrustType, PizzaState, PizzaDate, CustPrice, BusPrice) " +
+			query = "INSERT INTO pizza (pizza_Size ,pizza_CrustType, pizza_PizzaState, " +
+					"pizza_PizzaDate,pizza_CustPrice, pizza_BusPrice,ordertable_OrderID)" +
 					"VALUES (?, ?, ?, ?, ?, ?, ?);";
 			os = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -262,7 +263,7 @@ public final class DBNinja {
 				PreparedStatement topOS;
 				String topQuery;
 
-				topQuery = "INSERT INTO PizzaToppings (PizzaID, TopID, IsDouble) " +
+				topQuery = "INSERT INTO pizza_topping(pizza_PizzaID, topping_TopID, pizza_topping_IsDouble)\n" +
 						"VALUES (?, ?, ?);";
 				topOS = conn.prepareStatement(topQuery);
 				topOS.setInt(1, pizzaID);
@@ -276,7 +277,7 @@ public final class DBNinja {
 				PreparedStatement disOS;
 				String disQuery;
 
-				disQuery = "INSERT INTO PizzaDiscounts (PizzaID, DiscountID) " +
+				disQuery = "INSERT INTO pizza_discount (pizza_PizzaID, discount_DiscountID)\n" +
 						"VALUES (?, ?);";
 				disOS = conn.prepareStatement(disQuery);
 
