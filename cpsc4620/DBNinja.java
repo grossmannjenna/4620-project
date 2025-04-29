@@ -639,10 +639,71 @@ public final class DBNinja {
 				Double busprice = rset.getDouble("ordertable_BusPrice");
 				boolean complete = rset.getBoolean("ordertable_isComplete");
 
-				order = new Order(orderid, custid, type, datetime, custprice, busprice, complete);
+				switch (type.toLowerCase()) {
+					case "delivery":
+						PreparedStatement ds;
+						ResultSet rs;
+						ds = conn.prepareStatement("SELECT * FROM delivery WHERE ordertable_OrderID =?;");
+						ds.setInt(1, orderid);
+						rs = ds.executeQuery();
 
-				order.setPizzaList(getPizzas(order));
-				order.setDiscountList(getDiscounts(order));
+						if (rs.next()) {
+							String num = rs.getString("delivery_HouseNum");
+							String street = rs.getString("delivery_Street");
+							String city = rs.getString("delivery_City");
+							String state = rs.getString("delivery_State");
+							String zip = rs.getString("delivery_Zip");
+
+							boolean isDelivered = rs.getBoolean("delivery_IsDelivered");
+
+							String address = num + "\t" + street + "\t" + city + "\t" + state + "\t" + zip;
+
+							order = new DeliveryOrder(orderid, custid, datetime, custprice, busprice, complete, isDelivered, address);
+						}
+
+						ds.close();
+						rs.close();
+						break;
+
+					case "pickup":
+						PreparedStatement ps;
+						ResultSet rsPickup;
+						ps = conn.prepareStatement("SELECT * FROM pickup WHERE ordertable_OrderID =?;");
+						ps.setInt(1, orderid);
+						rsPickup = ps.executeQuery();
+
+						if (rsPickup.next()) {
+							boolean picked = rsPickup.getBoolean("pickup_IsPickedUp");
+
+							order = new PickupOrder(orderid, custid, datetime, custprice, busprice, picked, complete);
+						}
+
+						ps.close();
+						rsPickup.close();
+						break;
+
+					case "dinein":
+						PreparedStatement dineinStatement;
+						ResultSet rsDinein;
+						dineinStatement = conn.prepareStatement("SELECT * FROM dinein WHERE ordertable_OrderID =?;");
+						dineinStatement.setInt(1, orderid);
+						rsDinein = dineinStatement.executeQuery();
+
+						if (rsDinein.next()) {
+							int tableNum = rsDinein.getInt("dinein_TableNum");
+
+							order = new DineinOrder(orderid, custid, datetime, custprice, busprice, complete, tableNum);
+						}
+
+						dineinStatement.close();
+						rsDinein.close();
+						break;
+				}
+
+				if (order != null) {
+					order.setPizzaList(getPizzas(order));
+					order.setDiscountList(getDiscounts(order));
+				}
 			}
 			os.close();
 			rset.close();
