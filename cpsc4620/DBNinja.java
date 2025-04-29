@@ -1476,8 +1476,8 @@ public final class DBNinja {
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 
-			System.out.printf("%-22s%-22s%-22s%-22s\n", "Pizza Size", "Pizza Crust", "Profit", "Last Order Date");
-			System.out.printf("%-22s%-22s%-22s%-22s\n", "----------", "-----------", "------", "---------------");
+			System.out.printf("%-20s%-20s%-20s%-20s\n", "Pizza Size", "Pizza Crust", "Profit", "Last Order Date");
+			System.out.printf("%-20s%-20s%-20s%-20s\n", "----------", "-----------", "------", "---------------");
 
 			while(rset.next()) {
 
@@ -1486,7 +1486,7 @@ public final class DBNinja {
 				double profit = rset.getDouble("Profit");
 				String date = rset.getString("OrderMonth");
 
-				System.out.printf("%-22s%-22s%-22.2f%-22s\n", size, crust, profit, date);
+				System.out.printf("%-20s%-20s%-20.2f%-20s\n", size, crust, profit, date);
 
 			}
 		} catch (SQLException e) {
