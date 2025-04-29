@@ -205,9 +205,8 @@ public final class DBNinja {
 					pizza.setCustPrice(pizza.getCustPrice() + toppingCustPrice);
 					pizza.setBusPrice(pizza.getBusPrice() + toppingBusPrice);
 
-					double updatedInv = t.getCurINVT() - units;
-					t.setCurINVT((int) updatedInv);  // cast when you set
-
+					double updatedInv = 0 - units;
+					addToInventory(t.getTopID(), updatedInv);
 				}
 
 				for (Discount dis : pizza.getDiscounts()) {
