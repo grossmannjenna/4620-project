@@ -1204,24 +1204,26 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select pizza_CustPrice From pizza WHERE pizza_Size=? AND pizza_CrustType=?;";
+			query = "Select baseprice_CustPrice From baseprice WHERE baseprice_Size=? AND baseprice_CrustType=?;";
 			os = conn.prepareStatement(query);
 			os.setString(1, size);
 			os.setString(2, crust);
 			rset = os.executeQuery();
-			while(rset.next())
-			{
-				double custPrice = rset.getDouble("pizza_custPrice");
-				price = custPrice;
+			if (rset.next()) {
+				price = rset.getDouble("baseprice_CustPrice");
 			}
+
+			rset.close();
+			os.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
 
 		conn.close();
-
 		return price;
+
 	}
 
 	// COMPLETE - ELLE
@@ -1238,24 +1240,27 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select pizza_BusPrice From pizza WHERE pizza_Size=? AND pizza_CrustType=?;";
+			query = "Select baseprice_BusPrice From baseprice WHERE baseprice_Size=? AND baseprice_CrustType=?;";
 			os = conn.prepareStatement(query);
 			os.setString(1, size);
 			os.setString(2, crust);
 			rset = os.executeQuery();
-			while(rset.next())
-			{
-				double busPrice = rset.getDouble("pizza_busPrice");
-				price = busPrice;
+
+			if (rset.next()) {
+				price = rset.getDouble("baseprice_BusPrice");
 			}
+
+			rset.close();
+			os.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
 
 		conn.close();
-
 		return price;
+
 	}
 
 	// COMPLETE - ELLE
