@@ -1472,7 +1472,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From ProfitByPizza ORDER BY Profit, Size, Crust;";
+			query = "Select * From ProfitByPizza ORDER BY Profit ASC, Size ASC, Crust ASC;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 

@@ -22,8 +22,7 @@ CREATE VIEW PizzaDB.ProfitByPizza AS
     FROM pizza B
     LEFT JOIN ordertable OT ON B.ordertable_OrderID = OT.ordertable_OrderID
     WHERE B.pizza_PizzaState = 'completed'
-    GROUP BY B.pizza_Size, B.pizza_CrustType, DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y')
-    ORDER BY B.pizza_Size, B.pizza_CrustType;
+    GROUP BY B.pizza_Size, B.pizza_CrustType, DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y');
 
 # View 3
 CREATE VIEW PizzaDB.ProfitByOrderType AS
