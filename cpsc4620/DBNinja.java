@@ -188,7 +188,7 @@ public final class DBNinja {
 
 				pizza.setCustPrice(pizza.getCustPrice() + baseCustPrice);
 				pizza.setBusPrice(pizza.getBusPrice() + baseBusPrice);
-				
+
 				String pizzaQuery = "INSERT INTO pizza (pizza_Size ,pizza_CrustType, pizza_PizzaState, " +
 						"pizza_PizzaDate,pizza_CustPrice, pizza_BusPrice,ordertable_OrderID)" +
 						"VALUES (?, ?, ?, ?, ?, ?, ?);";

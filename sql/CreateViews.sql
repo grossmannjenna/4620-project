@@ -17,11 +17,12 @@ CREATE VIEW PizzaDB.ToppingPopularity AS
 CREATE VIEW PizzaDB.ProfitByPizza AS
     SELECT B.pizza_Size AS Size,
            B.pizza_CrustType AS Crust,
-           SUM(B.pizza_CustPrice-B.pizza_BusPrice) AS Profit, DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y') AS OrderMonth
+           SUM(B.pizza_CustPrice-B.pizza_BusPrice) AS Profit,
+           DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y') AS OrderMonth
     FROM pizza B
     LEFT JOIN ordertable OT ON B.ordertable_OrderID = OT.ordertable_OrderID
-    GROUP BY B.pizza_Size, B.pizza_CrustType, OrderMonth
-    ORDER BY Profit;
+    WHERE B.pizza_PizzaState = 'completed'
+    GROUP BY B.pizza_Size, B.pizza_CrustType, OrderMonth;
 
 # View 3
 CREATE VIEW PizzaDB.ProfitByOrderType AS
@@ -31,6 +32,7 @@ CREATE VIEW PizzaDB.ProfitByOrderType AS
            ROUND(SUM(ordertable_BusPrice), 2) AS TotalOrderCost,
            ROUND(SUM(ordertable_CustPrice - ordertable_BusPrice), 2) AS Profit
     FROM ordertable
+    WHERE ordertable_isComplete = 1
     GROUP BY customerType, DATE_FORMAT(ordertable_OrderDateTime, '%c/%Y')
     UNION ALL
     SELECT '',
@@ -38,4 +40,5 @@ CREATE VIEW PizzaDB.ProfitByOrderType AS
            ROUND(SUM(ordertable_CustPrice), 2),
            ROUND(SUM(ordertable_BusPrice), 2),
            ROUND(SUM(ordertable_CustPrice - ordertable_BusPrice), 2)
-    FROM ordertable;
+    FROM ordertable
+    WHERE ordertable_isComplete = 1;
