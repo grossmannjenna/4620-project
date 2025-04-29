@@ -377,7 +377,7 @@ public final class DBNinja {
 		 */
 
 		connect_to_db();
-		int newCustID = c.getCustID();
+		int newCustID = -1;
 
 		try {
 			PreparedStatement os;
@@ -392,8 +392,8 @@ public final class DBNinja {
 
 			ResultSet keys = os.getGeneratedKeys();
 			if (keys.next()) {
-				int custID = keys.getInt(1);
-				c.setCustID(custID);
+				newCustID = keys.getInt(1);
+				c.setCustID(newCustID);
 			}
 			os.close();
 
