@@ -128,14 +128,6 @@ public final class DBNinja {
 					addToInventory(t.getTopID(), updatedInv);
 				}
 
-				for (Discount dis : pizza.getDiscounts()) {
-					if (dis.isPercent()) {
-						pizza.setCustPrice(pizza.getCustPrice() * (1 - dis.getAmount() / 100));
-					} else {
-						pizza.setCustPrice(pizza.getCustPrice() - dis.getAmount());
-					}
-				}
-
 				totalCustPrice += pizza.getCustPrice();
 				totalBusPrice += pizza.getBusPrice();
 			}
