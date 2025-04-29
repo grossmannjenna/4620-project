@@ -1062,7 +1062,7 @@ public final class DBNinja {
 		 * */
 		connect_to_db();
 
-		quantity = (double) Math.round(quantity);
+		quantity = (double) Math.ceil(quantity);
 
 		try {
 			PreparedStatement os;
