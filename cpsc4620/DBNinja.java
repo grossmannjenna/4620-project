@@ -1056,14 +1056,14 @@ public final class DBNinja {
 		 * */
 		connect_to_db();
 
-		quantity = (double) Math.ceil(quantity);
-
 		try {
 			PreparedStatement os;
 			String query;
+			int roundedQuantity = (int) Math.ceil(quantity);
+
 			query = "UPDATE topping SET topping_CurINVT = topping_CurINVT + ? WHERE topping_TopID = ?;";
 			os = conn.prepareStatement(query);
-			os.setDouble(1, quantity);
+			os.setDouble(1, roundedQuantity);
 			os.setInt(2, toppingID);
 			os.executeUpdate();
 			os.close();
@@ -1071,6 +1071,8 @@ public final class DBNinja {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
+
+		conn.close();
 	}
 
 	// COMPLETE -Jenna
