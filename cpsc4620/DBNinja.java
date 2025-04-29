@@ -727,14 +727,13 @@ public final class DBNinja {
 		 */
 
 		connect_to_db();
-
 		ArrayList<Order> orderList = new ArrayList<>();
 
 		try {
 			PreparedStatement ps;
 			ResultSet rset;
 			String query;
-			query = "SELECT ordertable_OrderID, ordertable_OrderType, " +
+			query = "SELECT ordertable_OrderID, ordertable_OrderDateTime, ordertable_OrderType, " +
 					"ordertable_CustPrice, ordertable_BusPrice, ordertable_isComplete, customer_CustID " +
 					"FROM ordertable " +
 					"WHERE DATE(ordertable_OrderDateTime) = ?";
@@ -742,19 +741,86 @@ public final class DBNinja {
 			ps.setString(1, date);
 			rset = ps.executeQuery();
 			while (rset.next()) {
-				int Orderid = rset.getInt("ordertable_OrderID");
-				int cusid = rset.getInt("customer_CustID");
+				int orderid = rset.getInt("ordertable_OrderID");
+				String datetime = rset.getString("ordertable_OrderDateTime");
+				int custid = rset.getInt("customer_CustID");
 				String ordertype = rset.getString("ordertable_OrderType");
 				double custprice = rset.getDouble("ordertable_CustPrice");
 				double busprice = rset.getDouble("ordertable_BusPrice");
 				boolean complete = rset.getBoolean("ordertable_isComplete");
-				Order order = new Order(Orderid, cusid, ordertype, date, custprice, busprice, complete);
 
-				order.setPizzaList(getPizzas(order));
-				order.setDiscountList(getDiscounts(order));
+				Order order = null;
 
-				orderList.add(order);
+				switch (ordertype.toLowerCase()) {
+					case "delivery":
+						PreparedStatement deliveryS;
+						ResultSet deliveryRS;
+						deliveryS = conn.prepareStatement("SELECT * FROM delivery WHERE ordertable_OrderID =?;");
+						deliveryS.setInt(1, orderid);
+						deliveryRS = deliveryS.executeQuery();
+
+						if (deliveryRS.next()) {
+							String num = deliveryRS.getString("delivery_HouseNum");
+							String street = deliveryRS.getString("delivery_Street");
+							String city = deliveryRS.getString("delivery_City");
+							String state = deliveryRS.getString("delivery_State");
+							String zip = deliveryRS.getString("delivery_Zip");
+
+							boolean isDelivered = deliveryRS.getBoolean("delivery_IsDelivered");
+
+							String address = num + "\t" + street + "\t" + city + "\t" + state + "\t" + zip;
+
+							order = new DeliveryOrder(orderid, custid, datetime, custprice, busprice, complete, isDelivered, address);
+						}
+
+						deliveryS.close();
+						deliveryRS.close();
+						break;
+
+					case "pickup":
+						PreparedStatement pickupS;
+						ResultSet rsPickup;
+						pickupS = conn.prepareStatement("SELECT * FROM pickup WHERE ordertable_OrderID =?;");
+						pickupS.setInt(1, orderid);
+						rsPickup = pickupS.executeQuery();
+
+						if (rsPickup.next()) {
+							boolean picked = rsPickup.getBoolean("pickup_IsPickedUp");
+
+							order = new PickupOrder(orderid, custid, datetime, custprice, busprice, picked, complete);
+						}
+
+						pickupS.close();
+						rsPickup.close();
+						break;
+
+					case "dinein":
+						PreparedStatement dineinS;
+						ResultSet rsDinein;
+						dineinS = conn.prepareStatement("SELECT * FROM dinein WHERE ordertable_OrderID =?;");
+						dineinS.setInt(1, orderid);
+						rsDinein = dineinS.executeQuery();
+
+						if (rsDinein.next()) {
+							int tableNum = rsDinein.getInt("dinein_TableNum");
+
+							order = new DineinOrder(orderid, custid, datetime, custprice, busprice, complete, tableNum);
+						}
+
+						dineinS.close();
+						rsDinein.close();
+						break;
+				}
+
+				if (order != null) {
+					order.setPizzaList(getPizzas(order));
+					order.setDiscountList(getDiscounts(order));
+					orderList.add(order);
+				}
 			}
+			ps.close();
+			rset.close();
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
