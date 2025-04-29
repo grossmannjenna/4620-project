@@ -125,7 +125,8 @@ public final class DBNinja {
 					pizza.setCustPrice(pizza.getCustPrice() + toppingCustPrice);
 					pizza.setBusPrice(pizza.getBusPrice() + toppingBusPrice);
 
-					addToInventory(t.getTopID(), -units);
+					int roundedUnits = (int) Math.ceil(units);
+					addToInventory(t.getTopID(), -roundedUnits);
 				}
 
 				double pizzaCustPrice = pizza.getCustPrice();
