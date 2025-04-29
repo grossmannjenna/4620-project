@@ -1135,7 +1135,6 @@ public final class DBNinja {
 		 * The list can then be added to the Pizza object elsewhere in the
 		 */
 
-		//connect_to_db();
 		ArrayList<Topping> pizzaToppings = new ArrayList<>();
 
 		try {
@@ -1170,8 +1169,6 @@ public final class DBNinja {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
-
-		//conn.close();
 
 		return pizzaToppings;
 	}
@@ -1208,7 +1205,6 @@ public final class DBNinja {
 		 * Build an ArrayList of all the Pizzas associated with the Order.
 		 *
 		 */
-		//connect_to_db();
 		ArrayList<Pizza> pizzas = new ArrayList<>();
 
 		try {
@@ -1246,8 +1242,6 @@ public final class DBNinja {
 			// process the error or re-raise the exception to a higher level
 		}
 
-		//conn.close();
-
 		return pizzas;
 	}
 
@@ -1257,7 +1251,6 @@ public final class DBNinja {
 		 * Build an array list of all the Discounts associted with the Order.
 		 *
 		 */
-		// connect_to_db();
 		ArrayList<Discount> discounts = new ArrayList<>();
 
 		try {
@@ -1285,8 +1278,6 @@ public final class DBNinja {
 			// process the error or re-raise the exception to a higher level
 		}
 
-		//conn.close();
-
 		return discounts;
 	}
 
@@ -1296,7 +1287,6 @@ public final class DBNinja {
 		 * Build an array list of all the Discounts associted with the Pizza.
 		 *
 		 */
-		//connect_to_db();
 		ArrayList<Discount> discounts = new ArrayList<>();
 
 		try {
@@ -1323,7 +1313,6 @@ public final class DBNinja {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
-		//conn.close();
 
 		return discounts;
 
@@ -1551,6 +1540,7 @@ public final class DBNinja {
 	}
 
 	// helper function - elle
+	// getting the base prices based on crust and size
 	private static double[] getBasePrices(String size, String crust) {
 		double baseCustPrice = 0.0;
 		double baseBusPrice = 0.0;
