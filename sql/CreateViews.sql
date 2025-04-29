@@ -22,25 +22,26 @@ CREATE VIEW PizzaDB.ProfitByPizza AS
     FROM pizza B
     LEFT JOIN ordertable OT ON B.ordertable_OrderID = OT.ordertable_OrderID
     WHERE B.pizza_PizzaState = 'completed'
-    GROUP BY B.pizza_Size, B.pizza_CrustType, DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y');
+    GROUP BY B.pizza_Size, B.pizza_CrustType, DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y')
+    ORDER BY Profit;
+
+SELECT * FROM PizzaDB.ProfitByPizza;
 
 # View 3
 CREATE VIEW PizzaDB.ProfitByOrderType AS
-    SELECT o.ordertable_OrderType AS customerType,
+    SELECT ordertable_OrderType AS customerType,
            DATE_FORMAT(ordertable_OrderDateTime, '%c/%Y') AS OrderMonth,
-           ROUND(SUM(p.pizza_CustPrice), 2) AS TotalOrderPrice,
-           ROUND(SUM(p.pizza_BusPrice), 2) AS TotalOrderCost,
-           ROUND(SUM(p.pizza_CustPrice - p.pizza_BusPrice), 2) AS Profit
-    FROM pizza p
-    JOIN ordertable o ON p.ordertable_OrderID = o.ordertable_OrderID
-    WHERE p.pizza_PizzaState = 'completed'
-    GROUP BY customerType, OrderMonth
+           ROUND(SUM(ordertable_CustPrice), 2) AS TotalOrderPrice,
+           ROUND(SUM(ordertable_BusPrice), 2) AS TotalOrderCost,
+           ROUND(SUM(ordertable_CustPrice - ordertable_BusPrice), 2) AS Profit
+    FROM ordertable
+    GROUP BY customerType, DATE_FORMAT(ordertable_OrderDateTime, '%c/%Y')
     UNION ALL
     SELECT '',
            'Grand Total',
-           ROUND(SUM(p.pizza_CustPrice), 2),
-           ROUND(SUM(p.pizza_BusPrice), 2),
-           ROUND(SUM(p.pizza_CustPrice - p.pizza_BusPrice), 2)
-    FROM pizza p
-    JOIN ordertable o ON p.ordertable_OrderID = o.ordertable_OrderID
-    WHERE p.pizza_PizzaState = 'completed';
+           ROUND(SUM(ordertable_CustPrice), 2),
+           ROUND(SUM(ordertable_BusPrice), 2),
+           ROUND(SUM(ordertable_CustPrice - ordertable_BusPrice), 2)
+    FROM ordertable;
+
+SELECT * FROM PizzaDB.ProfitByOrderType;
