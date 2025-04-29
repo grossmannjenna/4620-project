@@ -1420,6 +1420,93 @@ public final class DBNinja {
 		conn.close();
 	}
 
+	// helper function - elle
+	private static double[] getBasePrices(String size, String crust) {
+		double baseCustPrice = 0.0;
+		double baseBusPrice = 0.0;
+
+		if (size.equals("Small")) {
+			switch (crust) {
+				case "Thin":
+					baseCustPrice = 3.00;
+					baseBusPrice = 0.50;
+					break;
+				case "Original":
+					baseCustPrice = 3.00;
+					baseBusPrice = 0.75;
+					break;
+				case "Pan":
+					baseCustPrice = 3.50;
+					baseBusPrice = 1.00;
+					break;
+				case "Gluten-Free":
+					baseCustPrice = 4.00;
+					baseBusPrice = 2.00;
+					break;
+			}
+		} else if (size.equals("Medium")) {
+			switch (crust) {
+				case "Thin":
+					baseCustPrice = 5.00;
+					baseBusPrice = 1.00;
+					break;
+				case "Original":
+					baseCustPrice = 5.00;
+					baseBusPrice = 1.50;
+					break;
+				case "Pan":
+					baseCustPrice = 6.00;
+					baseBusPrice = 2.25;
+					break;
+				case "Gluten-Free":
+					baseCustPrice = 6.25;
+					baseBusPrice = 3.00;
+					break;
+			}
+		} else if (size.equals("Large")) {
+			switch (crust) {
+				case "Thin":
+					baseCustPrice = 8.00;
+					baseBusPrice = 1.25;
+					break;
+				case "Original":
+					baseCustPrice = 8.00;
+					baseBusPrice = 2.00;
+					break;
+				case "Pan":
+					baseCustPrice = 9.00;
+					baseBusPrice = 3.00;
+					break;
+				case "Gluten-Free":
+					baseCustPrice = 9.50;
+					baseBusPrice = 4.00;
+					break;
+			}
+		} else if (size.equals("XLarge")) {
+			switch (crust) {
+				case "Thin":
+					baseCustPrice = 10.00;
+					baseBusPrice = 2.00;
+					break;
+				case "Original":
+					baseCustPrice = 10.00;
+					baseBusPrice = 3.00;
+					break;
+				case "Pan":
+					baseCustPrice = 11.50;
+					baseBusPrice = 4.50;
+					break;
+				case "Gluten-Free":
+					baseCustPrice = 12.50;
+					baseBusPrice = 6.00;
+					break;
+			}
+		}
+
+		return new double[]{baseCustPrice, baseBusPrice};
+
+	}
+
 	/*
 	 * These private methods help get the individual components of an SQL datetime object.
 	 * You're welcome to keep them or remove them....but they are usefull!
