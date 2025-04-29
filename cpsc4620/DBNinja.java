@@ -87,6 +87,15 @@ public final class DBNinja {
 
 
 		try {
+			double totalCustPrice = 0.0;
+			double totalBusPrice = 0.0;
+			for (Pizza p : o.getPizzaList()) {
+				totalCustPrice += p.getCustPrice();
+				totalBusPrice += p.getBusPrice();
+			}
+			o.setCustPrice(totalCustPrice);
+			o.setBusPrice(totalBusPrice);
+
 			// UPDATE Order DB
 			PreparedStatement os;
 			String ordertablequery = "INSERT INTO ordertable (ordertable_OrderType, ordertable_OrderDateTime, " +
@@ -190,7 +199,6 @@ public final class DBNinja {
 
 				for (Topping t : pizza.getToppings()) {
 					double toppingCustPrice = 0.0;
-					double toppingBusPrice = 0.0;
 
 					switch (pizza.getSize()){
 						case "Small":
@@ -207,21 +215,23 @@ public final class DBNinja {
 							break;
 					}
 
-					toppingBusPrice = toppingCustPrice / 2.0;
-
 					if(t.getDoubled()) {
 						toppingCustPrice *= 2;
-						toppingBusPrice *= 2;
 					}
 
 					pizza.setCustPrice(pizza.getCustPrice() + toppingCustPrice);
+
+					double toppingBusPrice = 0.25;
+					if (t.getDoubled()) {
+						toppingBusPrice *= 2;
+					}
+
 					pizza.setBusPrice(pizza.getBusPrice() + toppingBusPrice);
 				}
 
 				for (Discount dis : pizza.getDiscounts()) {
 					if (dis.isPercent()) {
-						double disAmt = (dis.getAmount() / 100.0) * pizza.getCustPrice();
-						pizza.setCustPrice(pizza.getCustPrice() - disAmt);
+						pizza.setCustPrice(pizza.getCustPrice() * (1 - dis.getAmount() / 100));
 					} else {
 						pizza.setCustPrice(pizza.getCustPrice() - dis.getAmount());
 					}
