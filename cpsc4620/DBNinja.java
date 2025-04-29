@@ -177,33 +177,32 @@ public final class DBNinja {
 
 				for (Topping t : pizza.getToppings()) {
 					double toppingCustPrice = 0.0;
+					double toppingBusPrice = 0.0;
+					double units = 0.0;
 
 					switch (pizza.getSize()){
 						case "Small":
-							toppingCustPrice = t.getSmallAMT();
+							units = t.getSmallAMT();
 							break;
 						case "Medium":
-							toppingCustPrice = t.getMedAMT();
+							units = t.getMedAMT();
 							break;
 						case "Large":
-							toppingCustPrice = t.getLgAMT();
+							units = t.getLgAMT();
 							break;
 						case "XLarge":
-							toppingCustPrice = t.getXLAMT();
+							units = t.getXLAMT();
 							break;
 					}
 
 					if(t.getDoubled()) {
-						toppingCustPrice *= 2;
+						units *= 2;
 					}
+
+					toppingCustPrice = units * t.getCustPrice();
+					toppingBusPrice = units * t.getBusPrice();
 
 					pizza.setCustPrice(pizza.getCustPrice() + toppingCustPrice);
-
-					double toppingBusPrice = 0.25;
-					if (t.getDoubled()) {
-						toppingBusPrice *= 2;
-					}
-
 					pizza.setBusPrice(pizza.getBusPrice() + toppingBusPrice);
 				}
 
