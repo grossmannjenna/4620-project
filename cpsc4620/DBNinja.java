@@ -124,8 +124,7 @@ public final class DBNinja {
 					pizza.setCustPrice(pizza.getCustPrice() + toppingCustPrice);
 					pizza.setBusPrice(pizza.getBusPrice() + toppingBusPrice);
 
-					double updatedInv = 0 - units;
-					addToInventory(t.getTopID(), updatedInv);
+					addToInventory(t.getTopID(), -units);
 				}
 
 				double pizzaCustPrice = pizza.getCustPrice();
@@ -1071,7 +1070,7 @@ public final class DBNinja {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
-		
+
 	}
 
 	// COMPLETE -Jenna
