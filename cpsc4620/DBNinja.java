@@ -88,9 +88,56 @@ public final class DBNinja {
 		try {
 			double totalCustPrice = 0.0;
 			double totalBusPrice = 0.0;
-			for (Pizza p : o.getPizzaList()) {
-				totalCustPrice += p.getCustPrice();
-				totalBusPrice += p.getBusPrice();
+
+			for (Pizza pizza : o.getPizzaList()) {
+				double[] basePrices = getBasePrices(pizza.getSize(), pizza.getCrustType());
+				pizza.setCustPrice(pizza.getCustPrice() + basePrices[0]);
+				pizza.setBusPrice(pizza.getBusPrice() + basePrices[1]);
+
+				for (Topping t : pizza.getToppings()) {
+					double toppingCustPrice = 0.0;
+					double toppingBusPrice = 0.0;
+					double units = 0.0;
+
+					switch (pizza.getSize()){
+						case "Small":
+							units = t.getSmallAMT();
+							break;
+						case "Medium":
+							units = t.getMedAMT();
+							break;
+						case "Large":
+							units = t.getLgAMT();
+							break;
+						case "XLarge":
+							units = t.getXLAMT();
+							break;
+					}
+
+					if(t.getDoubled()) {
+						units *= 2;
+					}
+
+					toppingCustPrice = units * t.getCustPrice();
+					toppingBusPrice = units * t.getBusPrice();
+
+					pizza.setCustPrice(pizza.getCustPrice() + toppingCustPrice);
+					pizza.setBusPrice(pizza.getBusPrice() + toppingBusPrice);
+
+					double updatedInv = 0 - units;
+					addToInventory(t.getTopID(), updatedInv);
+				}
+
+				for (Discount dis : pizza.getDiscounts()) {
+					if (dis.isPercent()) {
+						pizza.setCustPrice(pizza.getCustPrice() * (1 - dis.getAmount() / 100));
+					} else {
+						pizza.setCustPrice(pizza.getCustPrice() - dis.getAmount());
+					}
+				}
+
+				totalCustPrice += pizza.getCustPrice();
+				totalBusPrice += pizza.getBusPrice();
 			}
 
 			for (Discount disc: o.getDiscountList()) {
@@ -180,51 +227,6 @@ public final class DBNinja {
 
 			// insert pizzas
 			for(Pizza pizza : o.getPizzaList()) {
-				double[] basePrices = getBasePrices(pizza.getSize(), pizza.getCrustType());
-				pizza.setCustPrice(pizza.getCustPrice() + basePrices[0]);
-				pizza.setBusPrice(pizza.getBusPrice() + basePrices[1]);
-
-				for (Topping t : pizza.getToppings()) {
-					double toppingCustPrice = 0.0;
-					double toppingBusPrice = 0.0;
-					double units = 0.0;
-
-					switch (pizza.getSize()){
-						case "Small":
-							units = t.getSmallAMT();
-							break;
-						case "Medium":
-							units = t.getMedAMT();
-							break;
-						case "Large":
-							units = t.getLgAMT();
-							break;
-						case "XLarge":
-							units = t.getXLAMT();
-							break;
-					}
-
-					if(t.getDoubled()) {
-						units *= 2;
-					}
-
-					toppingCustPrice = units * t.getCustPrice();
-					toppingBusPrice = units * t.getBusPrice();
-
-					pizza.setCustPrice(pizza.getCustPrice() + toppingCustPrice);
-					pizza.setBusPrice(pizza.getBusPrice() + toppingBusPrice);
-
-					double updatedInv = 0 - units;
-					addToInventory(t.getTopID(), updatedInv);
-				}
-
-				for (Discount dis : pizza.getDiscounts()) {
-					if (dis.isPercent()) {
-						pizza.setCustPrice(pizza.getCustPrice() * (1 - dis.getAmount() / 100));
-					} else {
-						pizza.setCustPrice(pizza.getCustPrice() - dis.getAmount());
-					}
-				}
 
 				String pizzaQuery = "INSERT INTO pizza (pizza_Size ,pizza_CrustType, pizza_PizzaState, " +
 						"pizza_PizzaDate,pizza_CustPrice, pizza_BusPrice,ordertable_OrderID)" +
