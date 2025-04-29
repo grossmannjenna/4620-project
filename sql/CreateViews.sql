@@ -25,8 +25,6 @@ CREATE VIEW PizzaDB.ProfitByPizza AS
     GROUP BY B.pizza_Size, B.pizza_CrustType, DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y')
     ORDER BY Profit;
 
-SELECT * FROM PizzaDB.ProfitByPizza;
-
 # View 3
 CREATE VIEW PizzaDB.ProfitByOrderType AS
     SELECT ordertable_OrderType AS customerType,
@@ -43,5 +41,3 @@ CREATE VIEW PizzaDB.ProfitByOrderType AS
            ROUND(SUM(ordertable_BusPrice), 2),
            ROUND(SUM(ordertable_CustPrice - ordertable_BusPrice), 2)
     FROM ordertable;
-
-SELECT * FROM PizzaDB.ProfitByOrderType;
