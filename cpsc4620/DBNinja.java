@@ -193,6 +193,21 @@ public final class DBNinja {
 						break;
 				}
 
+				switch (pizza.getCrustType()) {
+					case "Thin":
+						baseCustPrice -= 1.00;
+						baseBusPrice -= 0.25;
+						break;
+					case "Pan":
+						baseCustPrice += 1.00;
+						baseBusPrice += 0.50;
+						break;
+					case "Gluteen-Free":
+						baseCustPrice += 2.00;
+						baseBusPrice += 1.00;
+						break;
+				}
+
 				pizza.setCustPrice(pizza.getCustPrice() + baseCustPrice);
 				pizza.setBusPrice(pizza.getBusPrice() + baseBusPrice);
 
