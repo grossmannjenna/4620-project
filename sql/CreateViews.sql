@@ -17,28 +17,31 @@ CREATE VIEW PizzaDB.ToppingPopularity AS
 CREATE VIEW PizzaDB.ProfitByPizza AS
     SELECT B.pizza_Size AS Size,
            B.pizza_CrustType AS Crust,
-           SUM(B.pizza_CustPrice-B.pizza_BusPrice) AS Profit,
+           ROUND(SUM(B.pizza_CustPrice-B.pizza_BusPrice), 2) AS Profit,
            DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y') AS OrderMonth
     FROM pizza B
     LEFT JOIN ordertable OT ON B.ordertable_OrderID = OT.ordertable_OrderID
     WHERE B.pizza_PizzaState = 'completed'
-    GROUP BY B.pizza_Size, B.pizza_CrustType, OrderMonth;
+    GROUP BY B.pizza_Size, B.pizza_CrustType, OrderMonth
+    ORDER BY B.pizza_Size, B.pizza_CrustType;
 
 # View 3
 CREATE VIEW PizzaDB.ProfitByOrderType AS
-    SELECT ordertable_OrderType AS customerType,
+    SELECT o.ordertable_OrderType AS customerType,
            DATE_FORMAT(ordertable_OrderDateTime, '%c/%Y') AS OrderMonth,
-           ROUND(SUM(ordertable_CustPrice), 2) AS TotalOrderPrice,
-           ROUND(SUM(ordertable_BusPrice), 2) AS TotalOrderCost,
-           ROUND(SUM(ordertable_CustPrice - ordertable_BusPrice), 2) AS Profit
-    FROM ordertable
-    WHERE ordertable_isComplete = 1
-    GROUP BY customerType, DATE_FORMAT(ordertable_OrderDateTime, '%c/%Y')
+           ROUND(SUM(p.pizza_CustPrice), 2) AS TotalOrderPrice,
+           ROUND(SUM(p.pizza_BusPrice), 2) AS TotalOrderCost,
+           ROUND(SUM(p.pizza_CustPrice - p.pizza_BusPrice), 2) AS Profit
+    FROM pizza p
+    JOIN ordertable o ON p.ordertable_OrderID = o.ordertable_OrderID
+    WHERE p.pizza_PizzaState = 'completed'
+    GROUP BY customerType, OrderMonth
     UNION ALL
     SELECT '',
            'Grand Total',
-           ROUND(SUM(ordertable_CustPrice), 2),
-           ROUND(SUM(ordertable_BusPrice), 2),
-           ROUND(SUM(ordertable_CustPrice - ordertable_BusPrice), 2)
-    FROM ordertable
-    WHERE ordertable_isComplete = 1;
+           ROUND(SUM(p.pizza_CustPrice), 2),
+           ROUND(SUM(p.pizza_BusPrice), 2),
+           ROUND(SUM(p.pizza_CustPrice - p.pizza_BusPrice), 2)
+    FROM pizza p
+    JOIN ordertable o ON p.ordertable_OrderID = o.ordertable_OrderID
+    WHERE p.pizza_PizzaState = 'completed';
