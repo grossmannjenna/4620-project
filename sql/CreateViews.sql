@@ -18,12 +18,12 @@ CREATE VIEW PizzaDB.ProfitByPizza AS
     SELECT B.pizza_Size AS Size,
            B.pizza_CrustType AS Crust,
            ROUND(SUM(B.pizza_CustPrice-B.pizza_BusPrice), 2) AS Profit,
-           DATE_FORMAT(B.pizza_PizzaDate, '%c/%Y') AS OrderMonth
+           DATE_FORMAT(MAX(B.pizza_PizzaDate), '%c/%Y') AS OrderMonth
     FROM pizza B
     LEFT JOIN ordertable OT ON B.ordertable_OrderID = OT.ordertable_OrderID
     WHERE B.pizza_PizzaState = 'completed'
-    GROUP BY B.pizza_Size, B.pizza_CrustType, OrderMonth
-    ORDER BY B.pizza_Size, B.pizza_CrustType;
+    GROUP BY B.pizza_Size, B.pizza_CrustType
+    ORDER BY Profit DESC, Size, Crust;
 
 # View 3
 CREATE VIEW PizzaDB.ProfitByOrderType AS
