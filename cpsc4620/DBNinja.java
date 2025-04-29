@@ -171,30 +171,9 @@ public final class DBNinja {
 
 			// insert pizzas
 			for(Pizza pizza : o.getPizzaList()) {
-				double baseCustPrice = 0.0;
-				double baseBusPrice = 0.0;
-
-				switch (pizza.getSize()) {
-					case "Small":
-						baseCustPrice = 3.00;
-						baseBusPrice = 0.50;
-						break;
-					case "Medium":
-						baseCustPrice = 5.00;
-						baseBusPrice = 1.00;
-						break;
-					case "Large":
-						baseCustPrice = 7.00;
-						baseBusPrice = 1.75;
-						break;
-					case "XLarge":
-						baseCustPrice = 9.00;
-						baseBusPrice = 2.00;
-						break;
-				}
-
-				pizza.setCustPrice(pizza.getCustPrice() + baseCustPrice);
-				pizza.setBusPrice(pizza.getBusPrice() + baseBusPrice);
+				double[] basePrices = getBasePrices(pizza.getSize(), pizza.getCrustType());
+				pizza.setCustPrice(pizza.getCustPrice() + basePrices[0]);
+				pizza.setBusPrice(pizza.getBusPrice() + basePrices[1]);
 
 				for (Topping t : pizza.getToppings()) {
 					double toppingCustPrice = 0.0;
