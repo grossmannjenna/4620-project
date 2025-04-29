@@ -132,6 +132,14 @@ public final class DBNinja {
 				totalBusPrice += pizza.getBusPrice();
 			}
 
+			for (Discount dis : o.getDiscountList()) {
+				if (dis.isPercent()) {
+					totalCustPrice = totalCustPrice * (1 - dis.getAmount() / 100);
+				} else {
+					totalCustPrice -= dis.getAmount();
+				}
+			}
+
 			o.setCustPrice(totalCustPrice);
 			o.setBusPrice(totalBusPrice);
 
