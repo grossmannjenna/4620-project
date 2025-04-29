@@ -91,8 +91,8 @@ public final class DBNinja {
 
 			for (Pizza pizza : o.getPizzaList()) {
 				double[] basePrices = getBasePrices(pizza.getSize(), pizza.getCrustType());
-				pizza.setCustPrice(pizza.getCustPrice() + basePrices[0]);
-				pizza.setBusPrice(pizza.getBusPrice() + basePrices[1]);
+				pizza.setCustPrice(basePrices[0]);
+				pizza.setBusPrice(basePrices[1]);
 
 				for (Topping t : pizza.getToppings()) {
 					double toppingCustPrice = 0.0;
