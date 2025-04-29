@@ -1342,12 +1342,12 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From ProfitByPizza ORDER BY Profit;";
+			query = "Select * From ProfitByPizza ORDER BY Size, Crust;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 
-			System.out.printf("%-15s %-15s %-10s %-20s\n", "Pizza Size", "Pizza Crust", "Profit", "Last Order Date");
-			System.out.printf("%-15s %-15s %-10s %-20s\n", "----------", "-----------", "------", "---------------");
+			System.out.printf("%-20s %-20s %-20s %-20s\n", "Pizza Size", "Pizza Crust", "Profit", "Last Order Date");
+			System.out.printf("%-20s %-20s %-20s %-20s\n", "----------", "-----------", "------", "---------------");
 
 			while(rset.next()) {
 
@@ -1356,7 +1356,7 @@ public final class DBNinja {
 				double profit = rset.getDouble("Profit");
 				String date = rset.getString("OrderMonth");
 
-				System.out.printf("%-15s %-15s %-9.2f %-20s\n", size, crust, profit, date);
+				System.out.printf("%-20s %-20s %-20.2f %-20s\n", size, crust, profit, date);
 
 			}
 		} catch (SQLException e) {
@@ -1392,8 +1392,8 @@ public final class DBNinja {
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 
-			System.out.printf("%-15s %-15s %-20s %-20s %-10s\n", "Customer Type", "Order Month", "Total Order Price", "Total Order Cost", "Profit");
-			System.out.printf("%-15s %-15s %-20s %-20s %-10s\n", "-------------", "-----------", "-----------------", "----------------", "------");
+			System.out.printf("%-20s %-20s %-20s %-20s %-20s\n", "Customer Type", "Order Month", "Total Order Price", "Total Order Cost", "Profit");
+			System.out.printf("%-20s %-20s %-20s %-20s %-20s\n", "-------------", "-----------", "-----------------", "----------------", "------");
 
 			while(rset.next()) {
 
@@ -1403,10 +1403,10 @@ public final class DBNinja {
 				double cost = rset.getDouble("TotalOrderCost");
 				double profit = rset.getDouble("Profit");
 
-				if (date.equals("Grand Total")) {
-					System.out.printf("%-31s $%-19.2f $%-19.2f %-10.2f\n", "Grand Total", price, cost, profit);
+				if (type == null || type.isEmpty()) {
+					System.out.printf("%-20s %-20s %-20.2f %-20.2 %-20.2f\n", "", date, price, cost, profit);
 				} else {
-					System.out.printf("%-15s %-15s $%-19.2f $%-19.2f %-10.2f\n", type, date, price, cost, profit);
+					System.out.printf("%-20s %-20s %-20.2f %-20.2 %-20.2f\n", type, date, price, cost, profit);
 				}
 
 			}
