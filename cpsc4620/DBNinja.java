@@ -8,18 +8,18 @@ import java.util.*;
  * This file is where you will implement the methods needed to support this application.
  * You will write the code to retrieve and save information to the database and use that
  * information to build the various objects required by the applicaiton.
- * 
+ *
  * The class has several hard coded static variables used for the connection, you will need to
  * change those to your connection information
- * 
+ *
  * This class also has static string for pickup, delivery and dine-in.
  * DO NOT change these constant values.
- * 
+ *
  * You can add any helper methods you need, but you must implement all the methods
  * in this class and use them to complete the project.  The autograder will rely on
  * these methods being implemented, so do not delete them or alter their method
  * signatures.
- * 
+ *
  * Make sure you properly open and close your DB connections in any method that
  * requires access to the DB.
  * Use the connect_to_db below to open your connection in DBConnector.
@@ -190,21 +190,6 @@ public final class DBNinja {
 					case "XLarge":
 						baseCustPrice = 9.00;
 						baseBusPrice = 2.00;
-						break;
-				}
-
-				switch (pizza.getCrustType()) {
-					case "Thin":
-						baseCustPrice -= 1.00;
-						baseBusPrice -= 0.25;
-						break;
-					case "Pan":
-						baseCustPrice += 1.00;
-						baseBusPrice += 0.50;
-						break;
-					case "Gluteen-Free":
-						baseCustPrice += 2.00;
-						baseBusPrice += 1.00;
 						break;
 				}
 
@@ -396,7 +381,7 @@ public final class DBNinja {
 			// process the error or re-raise the exception to a higher level
 		}
 		conn.close();
-		
+
 		return pizzaID;
 	}
 
@@ -1222,10 +1207,10 @@ public final class DBNinja {
 	// COMPLETE - ELLE
 	public static double getBaseCustPrice(String size, String crust) throws SQLException, IOException
 	{
-		/* 
+		/*
 		 * Query the database fro the base customer price for that size and crust pizza.
-		 * 
-		*/
+		 *
+		 */
 		connect_to_db();
 		double price = 0.0;
 
@@ -1254,12 +1239,12 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - ELLE
-	public static double getBaseBusPrice(String size, String crust) throws SQLException, IOException 
+	public static double getBaseBusPrice(String size, String crust) throws SQLException, IOException
 	{
-		/* 
+		/*
 		 * Query the database fro the base business price for that size and crust pizza.
-		 * 
-		*/
+		 *
+		 */
 		connect_to_db();
 		double price = 0.0;
 
@@ -1294,14 +1279,14 @@ public final class DBNinja {
 		 * Prints the ToppingPopularity view. Remember that this view
 		 * needs to exist in your DB, so be sure you've run your createViews.sql
 		 * files on your testing DB if you haven't already.
-		 * 
+		 *
 		 * The result should be readable and sorted as indicated in the prompt.
-		 * 
+		 *
 		 * HINT: You need to match the expected output EXACTLY....I would suggest
 		 * you look at the printf method (rather that the simple print of println).
 		 * It operates the same in Java as it does in C and will make your code
 		 * better.
-		 * 
+		 *
 		 */
 		connect_to_db();
 
@@ -1336,20 +1321,20 @@ public final class DBNinja {
 	}
 
 	// COMPLETE - ELLE
-	public static void printProfitByPizzaReport() throws SQLException, IOException 
+	public static void printProfitByPizzaReport() throws SQLException, IOException
 	{
 		/*
 		 * Prints the ProfitByPizza view. Remember that this view
 		 * needs to exist in your DB, so be sure you've run your createViews.sql
 		 * files on your testing DB if you haven't already.
-		 * 
+		 *
 		 * The result should be readable and sorted as indicated in the prompt.
-		 * 
+		 *
 		 * HINT: You need to match the expected output EXACTLY....I would suggest
 		 * you look at the printf method (rather that the simple print of println).
 		 * It operates the same in Java as it does in C and will make your code
 		 * better.
-		 * 
+		 *
 		 */
 		connect_to_db();
 
@@ -1388,14 +1373,14 @@ public final class DBNinja {
 		 * Prints the ProfitByOrderType view. Remember that this view
 		 * needs to exist in your DB, so be sure you've run your createViews.sql
 		 * files on your testing DB if you haven't already.
-		 * 
+		 *
 		 * The result should be readable and sorted as indicated in the prompt.
 		 *
 		 * HINT: You need to match the expected output EXACTLY....I would suggest
 		 * you look at the printf method (rather that the simple print of println).
 		 * It operates the same in Java as it does in C and will make your code
 		 * better.
-		 * 
+		 *
 		 */
 		connect_to_db();
 
@@ -1436,7 +1421,7 @@ public final class DBNinja {
 	}
 
 	/*
-	 * These private methods help get the individual components of an SQL datetime object. 
+	 * These private methods help get the individual components of an SQL datetime object.
 	 * You're welcome to keep them or remove them....but they are usefull!
 	 */
 	private static int getYear(String date)// assumes date format 'YYYY-MM-DD HH:mm:ss'
