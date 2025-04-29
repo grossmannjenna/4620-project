@@ -84,6 +84,7 @@ public final class DBNinja {
 		 *
 		 */
 		connect_to_db();
+		conn.setAutoCommit(true);
 
 		try {
 			double totalCustPrice = 0.0;
