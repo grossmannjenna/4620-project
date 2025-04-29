@@ -85,7 +85,6 @@ public final class DBNinja {
 		 */
 		connect_to_db();
 
-
 		try {
 			double totalCustPrice = 0.0;
 			double totalBusPrice = 0.0;
