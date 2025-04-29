@@ -1053,7 +1053,6 @@ public final class DBNinja {
 		 * Updates the quantity of the topping in the database by the amount specified.
 		 *
 		 * */
-		connect_to_db();
 
 		try {
 			PreparedStatement os;
