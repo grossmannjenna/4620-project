@@ -1062,6 +1062,8 @@ public final class DBNinja {
 		 * */
 		connect_to_db();
 
+		quantity = (double) Math.round(quantity);
+
 		try {
 			PreparedStatement os;
 			String query;
