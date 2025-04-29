@@ -128,24 +128,25 @@ public final class DBNinja {
 					addToInventory(t.getTopID(), updatedInv);
 				}
 
+				double pizzaCustPrice = pizza.getCustPrice();
 				for (Discount dis : pizza.getDiscounts()) {
 					if (dis.isPercent()) {
-						pizza.setCustPrice(pizza.getCustPrice() * (1 - (dis.getAmount()) / 100));
+						pizzaCustPrice = pizzaCustPrice * (1 - (dis.getAmount()) / 100);
 					} else {
-						pizza.setCustPrice(pizza.getCustPrice() - dis.getAmount());
+						pizzaCustPrice = pizzaCustPrice - dis.getAmount();
 					}
 				}
+				pizza.setCustPrice(pizzaCustPrice);
 
 				totalCustPrice += pizza.getCustPrice();
 				totalBusPrice += pizza.getBusPrice();
 			}
 
-
 			for (Discount dis : o.getDiscountList()) {
 				if (dis.isPercent()) {
 					totalCustPrice = totalCustPrice * (1 - (dis.getAmount() / 100));
 				} else {
-					totalCustPrice -= dis.getAmount();
+					totalCustPrice = totalCustPrice - dis.getAmount();
 				}
 			}
 
@@ -324,13 +325,13 @@ public final class DBNinja {
 					"VALUES (?, ?, ?, ?, ?, ?, ?);";
 			os = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
-			os.setInt(1, orderID);
-			os.setString(2, p.getSize());
-			os.setString(3, p.getCrustType());
-			os.setString(4, p.getPizzaState());
-			os.setTimestamp(5, new java.sql.Timestamp(d.getTime()));
-			os.setDouble(6, p.getCustPrice());
-			os.setDouble(7, p.getBusPrice());
+			os.setString(1, p.getSize());
+			os.setString(2, p.getCrustType());
+			os.setString(3, p.getPizzaState());
+			os.setTimestamp(4, new java.sql.Timestamp(d.getTime()));
+			os.setDouble(5, p.getCustPrice());
+			os.setDouble(6, p.getBusPrice());
+			os.setInt(7, orderID);
 			os.executeUpdate();
 
 			ResultSet keys = os.getGeneratedKeys();
