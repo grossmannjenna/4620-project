@@ -1071,8 +1071,7 @@ public final class DBNinja {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
-
-		conn.close();
+		
 	}
 
 	// COMPLETE -Jenna
