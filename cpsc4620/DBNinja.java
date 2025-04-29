@@ -1342,7 +1342,7 @@ public final class DBNinja {
 			PreparedStatement os;
 			ResultSet rset;
 			String query;
-			query = "Select * From ProfitByPizza ORDER BY Size, Crust;";
+			query = "Select * From ProfitByPizza ORDER BY Profit, Size, Crust;";
 			os = conn.prepareStatement(query);
 			rset = os.executeQuery();
 
@@ -1404,9 +1404,9 @@ public final class DBNinja {
 				double profit = rset.getDouble("Profit");
 
 				if (type == null || type.isEmpty()) {
-					System.out.printf("%-20s %-20s %-20.2f %-20.2 %-20.2f\n", "", date, price, cost, profit);
+					System.out.printf("%-20s %-20s %-20.2f %-20.2f %-20.2f\n", "", date, price, cost, profit);
 				} else {
-					System.out.printf("%-20s %-20s %-20.2f %-20.2 %-20.2f\n", type, date, price, cost, profit);
+					System.out.printf("%-20s %-20s %-20.2f %-20.2f %-20.2f\n", type, date, price, cost, profit);
 				}
 
 			}
