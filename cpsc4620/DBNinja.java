@@ -1062,11 +1062,11 @@ public final class DBNinja {
 			os.setDouble(1, quantity);
 			os.setInt(2, toppingID);
 			os.executeUpdate();
+			os.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 			// process the error or re-raise the exception to a higher level
 		}
-		conn.close();
 	}
 
 	// COMPLETE -Jenna
